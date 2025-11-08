@@ -22,6 +22,7 @@ namespace game.Views
             InitializeComponent();
 
             ShapeComboBox.DataContext = BoardCanvas;
+            DataContext = BoardCanvas;
             _rules = cfg.Rules;
             _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(cfg.SimulationSpeedMs) };
             _timer.Tick += (s, e) => BoardCanvas.Step(_rules);

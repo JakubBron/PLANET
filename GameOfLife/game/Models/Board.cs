@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Windows.Automation;
@@ -8,18 +9,38 @@ using game.Commands;
 
 namespace game.Models
 {
-    public class Board
+    public class Board: INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+
         private GameConfig cfg = new GameConfig();
         private HashSet<(int x, int y)> _alive = new HashSet<(int x, int y)>();
 
         public int Width { get; private set; }
         public int Height { get; private set; }
-
-        public int Generation { get; private set; } = 0;
-        public int Born { get; private set; } = 0;
-        public int Died { get; private set; } = 0;
         public double Density { get; private set; }
+
+        private int _generation = 0;
+        public int Generation
+        {
+            get => _generation;
+            private set { _generation = value; OnPropertyChanged(nameof(Generation)); }
+        }
+
+        private int _born = 0;
+        public int Born
+        {
+            get => _born;
+            private set { _born = value; OnPropertyChanged(nameof(Born)); }
+        }
+
+        private int _died = 0;
+        public int Died
+        {
+            get => _died;
+            private set { _died = value; OnPropertyChanged(nameof(Died)); }
+        }
 
         public IEnumerable<Cell> Cells => _alive.Select(a => new Cell(a.x, a.y, true));
 
@@ -137,6 +158,9 @@ namespace game.Models
 
             _alive = newAlive;
             Generation++;
+            Born = Born;
+            Died = Died;
+            OnPropertyChanged(nameof(Cells));
         }
 
         // Zapis i odczyt do pliku

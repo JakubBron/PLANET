@@ -49,6 +49,14 @@
                 <Slider x:Name="SpeedSlider" Minimum="10" Maximum="1000" Value="100" TickFrequency="50" IsSnapToTickEnabled="True" ValueChanged="SpeedSlider_ValueChanged"/>
             </StackPanel>
 
+            <StackPanel x:Name="StatsPanel" Orientation="Vertical"
+                        HorizontalAlignment="Left"
+                        Background="#80000000" Margin="5" Width="178">
+                <TextBlock Text="{Binding Board.Generation, StringFormat=Generation: {0}}" Foreground="Yellow" FontFamily="Consolas"/>
+                <TextBlock Text="{Binding Board.Born, StringFormat=Born: {0}}" Foreground="Yellow" FontFamily="Consolas"/>
+                <TextBlock Text="{Binding Board.Died, StringFormat=Died: {0}}" Foreground="Yellow" FontFamily="Consolas"/>
+                <TextBlock Text="{Binding Board.Cells.Count, StringFormat=Cells: {0}}" Foreground="Yellow" FontFamily="Consolas"/>
+            </StackPanel>
         </StackPanel>
 
         <ScrollViewer x:Name="BoardScrollViewer" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">

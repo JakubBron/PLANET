@@ -122,14 +122,6 @@ namespace game.Views
                 }
             }
 
-            // Statystyki
-            var text = $"Generation: {_board.Generation}\nBorn: {_board.Born}\nDied: {_board.Died}\nCells: {_board.Cells.Count()}";
-            var ft = new FormattedText(
-                text, System.Globalization.CultureInfo.InvariantCulture,
-                FlowDirection.LeftToRight,
-                new Typeface("Consolas"), 14, Brushes.Yellow, VisualTreeHelper.GetDpi(this).PixelsPerDip);
-            dc.DrawText(ft, new Point(5, 5));
-
             dc.Pop();
         }
 
