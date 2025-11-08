@@ -8,7 +8,7 @@ namespace game.Views
 {
     public class BoardRenderer : FrameworkElement
     {
-        private GameConfig cfg = new GameConfig();
+        private static GameConfig cfg = new GameConfig();
         private Board _board;
         private int _cellSize = 10;
         private bool _isDrawing = false;
@@ -16,7 +16,23 @@ namespace game.Views
 
         public Brush CellBrush { get; set; } = Brushes.LimeGreen;
         public Brush BackgroundBrush { get; set; } = Brushes.Black;
-        public double Zoom { get; set; } = 1.0;
+        public double Zoom { get; set; } = cfg.Zoom;
+
+        // shape name -> shape type (class) is converted automatically by WPF
+        private CellShape shapeOfCellChosenByUser = CellShape.Rectangle;
+        public CellShape CellShape
+        {
+            get => shapeOfCellChosenByUser;
+            set
+            {
+                if (shapeOfCellChosenByUser != value)
+                {
+                    shapeOfCellChosenByUser = value;
+                    InvalidateVisual(); // redraw whenever shape changes
+                }
+            }
+        }
+
 
         public BoardRenderer()
         {
@@ -66,11 +82,38 @@ namespace game.Views
             base.OnRender(dc);
 
             dc.PushTransform(new ScaleTransform(Zoom, Zoom));
+
+            // background
             dc.DrawRectangle(BackgroundBrush, null, new Rect(0, 0, _board.Width * _cellSize, _board.Height * _cellSize));
 
+            // cells
             foreach (var cell in _board.Cells)
             {
-                dc.DrawRectangle(CellBrush, null, new Rect(cell.X * _cellSize, cell.Y * _cellSize, _cellSize, _cellSize));
+                var rect = new Rect(cell.X * _cellSize, cell.Y * _cellSize, _cellSize, _cellSize);
+                switch (CellShape)
+                {
+                    case CellShape.Rectangle:
+                        dc.DrawRectangle(CellBrush, null, rect);
+                        break;
+                    case CellShape.Ellipse:
+                        dc.DrawEllipse(CellBrush, null,
+                            new Point(rect.X + _cellSize / 2.0, rect.Y + _cellSize / 2.0),
+                            _cellSize / 2.0, _cellSize / 2.0);
+                        break;
+                    case CellShape.Triangle:
+                        var p1 = new Point(rect.X + _cellSize / 2.0, rect.Y);
+                        var p2 = new Point(rect.X, rect.Y + _cellSize);
+                        var p3 = new Point(rect.X + _cellSize, rect.Y + _cellSize);
+                        var triangle = new StreamGeometry();
+                        using (var ctx = triangle.Open())
+                        {
+                            ctx.BeginFigure(p1, true, true);
+                            ctx.LineTo(p2, true, false);
+                            ctx.LineTo(p3, true, false);
+                        }
+                        dc.DrawGeometry(CellBrush, null, triangle);
+                        break;
+                }
             }
 
             // Statystyki
@@ -130,6 +173,8 @@ namespace game.Views
         {
             return new Size(_board.Width * _cellSize * Zoom, _board.Height * _cellSize * Zoom);
         }
+
+
 
     }
 }

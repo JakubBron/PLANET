@@ -18,15 +18,12 @@ namespace game.Views
 
         public MainWindow()
         {
-           
             InitializeComponent();
 
+            ShapeComboBox.DataContext = BoardCanvas;
             _rules = cfg.Rules;
-
-            _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(100) };
+            _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(cfg.SimulationSpeedMs) };
             _timer.Tick += (s, e) => BoardCanvas.Step(_rules);
-
-            BoardCanvas.Randomize();
         }
 
         private void Start_Click(object sender, RoutedEventArgs e) => _timer.Start();
@@ -61,7 +58,10 @@ namespace game.Views
 
         private void ZoomSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (BoardCanvas == null || BoardScrollViewer == null) return;
+            if (BoardCanvas == null || BoardScrollViewer == null)
+            {
+                return;
+            }
 
             BoardCanvas.Zoom = e.NewValue;
             BoardCanvas.InvalidateMeasure();  // update size for scrollbars
@@ -105,7 +105,6 @@ namespace game.Views
             if (int.TryParse(BoardSizeUserY.Text, out int value) && value > 0)
                 _newBoardHeight = value;
         }
-
 
     }
 }
