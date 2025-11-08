@@ -13,7 +13,7 @@ namespace game.ViewModels
         private readonly DispatcherTimer _timer;
         private readonly Board _board;
         private GameRules _rules;
-        private readonly GameConfig cfg = GameConfig.Instance;
+        private readonly GameConfig cfg = new GameConfig();
 
         public event PropertyChangedEventHandler PropertyChanged;
 

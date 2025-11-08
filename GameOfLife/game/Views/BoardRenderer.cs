@@ -8,7 +8,7 @@ namespace game.Views
 {
     public class BoardRenderer : FrameworkElement
     {
-        private GameConfig cfg = GameConfig.Instance;
+        private GameConfig cfg = new GameConfig();
         private Board _board;
         private int _cellSize = 10;
         private bool _isDrawing = false;
@@ -25,6 +25,11 @@ namespace game.Views
             MouseDown += OnMouseDown;
             MouseMove += OnMouseMove;
             MouseUp += OnMouseUp;
+        }
+
+        public void SetBoard(Board board)
+        {
+            _board = board;
         }
 
         public void Step(GameRules rules)

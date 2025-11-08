@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Threading;
 using game.Helpers;
 using Microsoft.Win32;
@@ -11,13 +12,16 @@ namespace game.Views
     {
         private DispatcherTimer _timer;
         private GameRules _rules;
+        private int _newBoardWidth;
+        private int _newBoardHeight;
+        private GameConfig cfg = new GameConfig();
 
         public MainWindow()
         {
            
             InitializeComponent();
 
-            _rules = GameRules.FromString("B3/S23");
+            _rules = cfg.Rules;
 
             _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(100) };
             _timer.Tick += (s, e) => BoardCanvas.Step(_rules);
@@ -71,6 +75,31 @@ namespace game.Views
                 _rules = GameRules.FromString(RulesBox.Text);
             }
             catch { /* ignore invalid input */ }
+        }
+
+        private void ResizeButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (_newBoardWidth <= 0 || _newBoardHeight <= 0)
+            {
+                return;
+            }
+
+            var newBoard = new Board(_newBoardWidth, _newBoardHeight);
+            BoardCanvas.SetBoard(newBoard);
+
+            BoardCanvas.InvalidateVisual();
+        }
+
+        private void BoardSizeBox_XValueChanged(object sender, TextChangedEventArgs e)
+        {
+            if (int.TryParse(BoardSizeUserX.Text, out int value) && value > 0)
+                _newBoardWidth = value;
+        }
+
+        private void BoardSizeBox_YValueChanged(object sender, TextChangedEventArgs e)
+        {
+            if (int.TryParse(BoardSizeUserY.Text, out int value) && value > 0)
+                _newBoardHeight = value;
         }
     }
 }

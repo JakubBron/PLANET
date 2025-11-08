@@ -18,6 +18,11 @@
             <Slider Minimum="0.1" Maximum="5" Value="1" Width="100" ValueChanged="ZoomSlider_ValueChanged"/>
             <TextBlock Text="Rules:" VerticalAlignment="Center" Margin="5,0"/>
             <TextBox Name="RulesBox" Width="60" Text="B3/S23" TextChanged="RulesBox_TextChanged"/>
+            <TextBlock><Run Text="Board size"/><Run Text=":"/></TextBlock>
+            <TextBox x:Name="BoardSizeUserX" Width="60" Text="100" TextChanged="BoardSizeBox_XValueChanged"/>
+            <TextBlock><Run Language="pl-pl" Text="x"/></TextBlock>
+            <TextBox x:Name="BoardSizeUserY" Width="60" Text="100" TextChanged="BoardSizeBox_YValueChanged"/>
+            <Button x:Name="ResizeButton" Content="Resize" Click="ResizeButton_OnClick"/>
         </StackPanel>
 
         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">

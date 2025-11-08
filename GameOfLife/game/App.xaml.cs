@@ -15,7 +15,7 @@ public partial class App : Application
     {
         base.OnStartup(e);
 
-        var cfg = GameConfig.Instance;
+        var cfg = new GameConfig();
     }
 }
 

@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Automation;
+using System.Windows.Input;
 using game.Helpers;
 
 namespace game.Models
 {
     public class Board
     {
-        private GameConfig cfg = GameConfig.Instance;
+        private GameConfig cfg = new GameConfig();
         private HashSet<(int x, int y)> _alive = new HashSet<(int x, int y)>();
 
         public int Width { get; private set; }
@@ -18,6 +19,7 @@ namespace game.Models
         public int Generation { get; private set; } = 0;
         public int Born { get; private set; } = 0;
         public int Died { get; private set; } = 0;
+        public double Density { get; private set; }
 
         public IEnumerable<Cell> Cells => _alive.Select(a => new Cell(a.x, a.y, true));
 
@@ -25,11 +27,12 @@ namespace game.Models
         {
             Width = width ?? cfg.BoardWidth;
             Height = height ?? cfg.BoardHeight;
+            Randomize(Width, Height);
         }
 
         public void SetAlive(int x, int y)
         {
-            if (0 <= x && x <= Width && 0 <= y && y <= Height)
+            if (0 <= x && x < Width && 0 <= y && y < Height)
             {
                 _alive.Add((x, y));
             }
@@ -47,10 +50,9 @@ namespace game.Models
 
         public void Randomize(int? width = null, int? height = null, double? density = null)
         {
-
             Width = width ?? cfg.BoardWidth;
             Height = height ?? cfg.BoardHeight;
-            density = density ?? cfg.Density;
+            Density = density ?? cfg.Density;
 
             Clear();
             var rnd = new Random();
@@ -58,13 +60,25 @@ namespace game.Models
             {
                 for (int y = 0; y < height; y++)
                 {
-                    if (rnd.NextDouble() < density)
+                    if (rnd.NextDouble() < Density)
                     {
                         SetAlive(x, y);
                     }
                 }
             }
-            
+
+            /*
+            Width = width ?? cfg.BoardWidth;
+            Height = height ?? cfg.BoardHeight;
+            for (int x = 0; x < width; x++)
+            {
+                SetAlive(x, 1);
+            }
+
+            for (int y = 0; y < height; y++)
+            {
+                SetAlive(1, y);
+            }*/
         }
 
         public void Step(GameRules rules)
