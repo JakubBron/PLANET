@@ -7,31 +7,32 @@
 
     <DockPanel>
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="5">
-            <Button Content="Start" Click="Start_Click"/>
-            <Button Content="Stop" Click="Stop_Click"/>
-            <Button Content="Step" Click="Step_Click"/>
-            <Button Content="Clear" Click="Clear_Click"/>
-            <Button Content="Random" Click="Random_Click"/>
-            <Button Content="Save" Click="Save_Click"/>
-            <Button Content="Load" Click="Load_Click"/>
-            <TextBlock Text="Cell Size:" VerticalAlignment="Center" Margin="5,0"/>
-            <TextBox Name="CellSizeBox" Width="40" Text="10" TextChanged="CellSizeBox_TextChanged"/>
-            <TextBlock Text="Zoom:" VerticalAlignment="Center" Margin="5,0"/>
+            <Button Content="Start" Style="{StaticResource CommonButtonStyle}" Click="Start_Click"/>
+            <Button Content="Stop" Style="{StaticResource CommonButtonStyle}" Click="Stop_Click"/>
+            <Button Content="Step" Style="{StaticResource CommonButtonStyle}" Click="Step_Click"/>
+            <Button Content="Clear" Style="{StaticResource CommonButtonStyle}" Click="Clear_Click"/>
+            <Button Content="Random" Style="{StaticResource CommonButtonStyle}" Click="Random_Click"/>
+            <Button Content="Save" Style="{StaticResource CommonButtonStyle}" Click="Save_Click"/>
+            <Button Content="Load" Style="{StaticResource CommonButtonStyle}" Click="Load_Click"/>
+            <TextBlock Text="Cell Size:" Style="{StaticResource CommonTextStyle}" VerticalAlignment="Center" Margin="5,0"/>
+            <TextBox Name="CellSizeBox" Style="{StaticResource TextBoxStyle}" Width="40" Text="10" TextChanged="CellSizeBox_TextChanged"/>
+
+            <TextBlock Text="Zoom:" Style="{StaticResource CommonTextStyle}" VerticalAlignment="Center" Margin="5,0"/>
             <Slider Minimum="0.1" Maximum="5" Value="1" Width="100" ValueChanged="ZoomSlider_ValueChanged"/>
-            <TextBlock Text="Rules:" VerticalAlignment="Center" Margin="5,0"/>
-            <TextBox Name="RulesBox" Width="60" Text="B3/S23" TextChanged="RulesBox_TextChanged"/>
-            <TextBlock><Run Text="Board size"/><Run Text=":"/></TextBlock>
-            <TextBox x:Name="BoardSizeUserX" Width="60" Text="100" TextChanged="BoardSizeBox_XValueChanged"/>
-            <TextBlock><Run Language="pl-pl" Text="x"/></TextBlock>
-            <TextBox x:Name="BoardSizeUserY" Width="60" Text="100" TextChanged="BoardSizeBox_YValueChanged"/>
-            <Button x:Name="ResizeButton" Content="Resize" Click="ResizeButton_OnClick"/>
+
+            <TextBlock Text="Rules:" Style="{StaticResource CommonTextStyle}" VerticalAlignment="Center" Margin="5,0"/>
+            <TextBox Name="RulesBox" Style="{StaticResource TextBoxStyle}" Width="60" Text="B3/S23" TextChanged="RulesBox_TextChanged"/>
+
+            <TextBlock Text="Board size:" Style="{StaticResource CommonTextStyle}"/>
+            <TextBox x:Name="BoardSizeUserX" Style="{StaticResource TextBoxStyle}" Width="60" Text="100" TextChanged="BoardSizeBox_XValueChanged"/>
+            <TextBlock Text="x" Style="{StaticResource CommonTextStyle}"/>
+            <TextBox x:Name="BoardSizeUserY" Style="{StaticResource TextBoxStyle}" Width="60" Text="100" TextChanged="BoardSizeBox_YValueChanged"/>
+            <Button x:Name="ResizeButton" Style="{StaticResource CommonButtonStyle}" Content="Resize" Click="ResizeButton_OnClick"/>
         </StackPanel>
 
         <StackPanel DockPanel.Dock="Right" Margin="5">
             <TextBlock Text="Cell Shape:" FontWeight="Bold" Margin="0,0,0,5"/>
-            <ComboBox x:Name="ShapeComboBox"
-                SelectedValue="{Binding Path=CellShape}"
-                SelectedValuePath="Content">
+            <ComboBox x:Name="ShapeComboBox" SelectedValue="{Binding Path=CellShape}" SelectedValuePath="Content">
                 <ComboBoxItem Content="Rectangle" IsSelected="True"/>
                 <ComboBoxItem Content="Circle"/>
                 <ComboBoxItem Content="Triangle"/>
