@@ -1,0 +1,8 @@
+{
+  "BoardWidth": 500,
+  "BoardHeight": 500,
+  "Density": 0.2,
+  "CellSize": 6,
+  "SimulationSpeedMs": 100,
+  "Rules": "B3/S23"
+}
