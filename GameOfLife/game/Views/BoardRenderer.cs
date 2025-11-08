@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using game.Helpers;
+using game.Commands;
 using game.Models;
 
 namespace game.Views
@@ -119,5 +119,17 @@ namespace game.Views
 
             InvalidateVisual();
         }
+
+
+        protected override Size MeasureOverride(Size availableSize)
+        {
+            return new Size(_board.Width * _cellSize * Zoom, _board.Height * _cellSize * Zoom);
+        }
+
+        protected override Size ArrangeOverride(Size finalSize)
+        {
+            return new Size(_board.Width * _cellSize * Zoom, _board.Height * _cellSize * Zoom);
+        }
+
     }
 }

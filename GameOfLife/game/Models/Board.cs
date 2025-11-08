@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Automation;
 using System.Windows.Input;
-using game.Helpers;
+using game.Commands;
 
 namespace game.Models
 {

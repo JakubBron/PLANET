@@ -1,7 +1,7 @@
 ﻿using System.Configuration;
 using System.Data;
 using System.Windows;
-using game.Helpers;
+using game.Commands;
 using game.Models;
 
 namespace game;

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace game.Helpers
+namespace game.Commands
 {
     public class RelayCommand : ICommand
     {

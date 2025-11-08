@@ -25,7 +25,7 @@
             <Button x:Name="ResizeButton" Content="Resize" Click="ResizeButton_OnClick"/>
         </StackPanel>
 
-        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+        <ScrollViewer x:Name="BoardScrollViewer" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
             <local:BoardRenderer x:Name="BoardCanvas"/>
         </ScrollViewer>
     </DockPanel>

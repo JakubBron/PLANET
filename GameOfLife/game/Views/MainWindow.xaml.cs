@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
-using game.Helpers;
+using game.Commands;
 using Microsoft.Win32;
 using game.Models;
 
@@ -61,11 +61,15 @@ namespace game.Views
 
         private void ZoomSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (BoardCanvas == null)
-            {
-                return;
-            }
+            if (BoardCanvas == null || BoardScrollViewer == null) return;
+
             BoardCanvas.Zoom = e.NewValue;
+            BoardCanvas.InvalidateMeasure();  // update size for scrollbars
+            BoardCanvas.InvalidateVisual();
+
+            // Reset scroll position to top-left
+            BoardScrollViewer.ScrollToHorizontalOffset(0);
+            BoardScrollViewer.ScrollToVerticalOffset(0);
         }
 
         private void RulesBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
@@ -101,5 +105,7 @@ namespace game.Views
             if (int.TryParse(BoardSizeUserY.Text, out int value) && value > 0)
                 _newBoardHeight = value;
         }
+
+
     }
 }

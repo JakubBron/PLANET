@@ -3,7 +3,7 @@ using System.IO;
 using System.Text.Json;
 using game.Models;
 
-namespace game.Helpers
+namespace game.Commands
 {
     public sealed class GameConfig
     {

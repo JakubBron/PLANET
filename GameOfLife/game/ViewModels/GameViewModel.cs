@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using System.Windows.Threading;
-using game.Helpers;
+using game.Commands;
 using game.Models;
 
 namespace game.ViewModels
