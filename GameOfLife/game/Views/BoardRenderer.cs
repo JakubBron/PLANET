@@ -15,6 +15,12 @@ namespace game.Views
         private bool _drawState = true;
 
         public Brush CellBrush { get; set; } = Brushes.LimeGreen;
+        public void SetCellBrush(Brush brush)
+        {
+            CellBrush = brush;
+            InvalidateVisual();
+        }
+
         public Brush BackgroundBrush { get; set; } = Brushes.Black;
         public double Zoom { get; set; } = cfg.Zoom;
 
@@ -95,7 +101,7 @@ namespace game.Views
                     case CellShape.Rectangle:
                         dc.DrawRectangle(CellBrush, null, rect);
                         break;
-                    case CellShape.Ellipse:
+                    case CellShape.Circle:
                         dc.DrawEllipse(CellBrush, null,
                             new Point(rect.X + _cellSize / 2.0, rect.Y + _cellSize / 2.0),
                             _cellSize / 2.0, _cellSize / 2.0);

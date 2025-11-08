@@ -5,6 +5,7 @@ using System.Windows.Threading;
 using game.Commands;
 using Microsoft.Win32;
 using game.Models;
+using System.Windows.Media;
 
 namespace game.Views
 {
@@ -106,5 +107,23 @@ namespace game.Views
                 _newBoardHeight = value;
         }
 
+        private void CellColorComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (BoardCanvas == null) return;
+
+            if (CellColorComboBox.SelectedItem is ComboBoxItem item)
+            {
+                var colorName = item.Content.ToString();
+                var brush = (Brush)new BrushConverter().ConvertFromString(colorName);
+                BoardCanvas.SetCellBrush(brush);
+            }
+        }
+        private void SpeedSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (_timer != null)
+            {
+                _timer.Interval = TimeSpan.FromMilliseconds(SpeedSlider.Value);
+            }
+        }
     }
 }

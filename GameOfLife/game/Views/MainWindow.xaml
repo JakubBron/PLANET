@@ -36,6 +36,19 @@
                 <ComboBoxItem Content="Circle"/>
                 <ComboBoxItem Content="Triangle"/>
             </ComboBox>
+            <TextBlock Text="Cell Color:" FontWeight="Bold" Margin="0,10,0,5"/>
+            <ComboBox x:Name="CellColorComboBox" SelectionChanged="CellColorComboBox_SelectionChanged">
+                <ComboBoxItem Content="LimeGreen" IsSelected="True"/>
+                <ComboBoxItem Content="Red"/>
+                <ComboBoxItem Content="Blue"/>
+                <ComboBoxItem Content="Yellow"/>
+                <ComboBoxItem Content="Magenta"/>
+            </ComboBox>
+            <StackPanel DockPanel.Dock="Right" Margin="5">
+                <TextBlock Text="Simulation Speed (ms per step):" FontWeight="Bold" Margin="0,10,0,5"/>
+                <Slider x:Name="SpeedSlider" Minimum="10" Maximum="1000" Value="100" TickFrequency="50" IsSnapToTickEnabled="True" ValueChanged="SpeedSlider_ValueChanged"/>
+            </StackPanel>
+
         </StackPanel>
 
         <ScrollViewer x:Name="BoardScrollViewer" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
