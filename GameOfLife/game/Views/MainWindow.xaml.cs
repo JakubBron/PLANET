@@ -6,6 +6,7 @@ using game.Commands;
 using Microsoft.Win32;
 using game.Models;
 using System.Windows.Media;
+using System.Windows.Data;
 
 namespace game.Views
 {
@@ -16,6 +17,7 @@ namespace game.Views
         private int _newBoardWidth;
         private int _newBoardHeight;
         private GameConfig cfg = new GameConfig();
+        private bool _isSimulationRunning = false;
 
         public MainWindow()
         {
@@ -26,26 +28,60 @@ namespace game.Views
             _rules = cfg.Rules;
             _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(cfg.SimulationSpeedMs) };
             _timer.Tick += (s, e) => BoardCanvas.Step(_rules);
+            SetSimulationState(false);
         }
 
-        private void Start_Click(object sender, RoutedEventArgs e) => _timer.Start();
-        private void Stop_Click(object sender, RoutedEventArgs e) => _timer.Stop();
+        private void SetSimulationState(bool isRunning)
+        {
+            _isSimulationRunning = isRunning;
+
+            StartButton.IsEnabled = !isRunning;
+            StepButton.IsEnabled = !isRunning;
+            ClearButton.IsEnabled = !isRunning;
+            RandomButton.IsEnabled = !isRunning;
+            ResizeButton.IsEnabled = !isRunning;
+
+            CellSizeBox.IsEnabled = !isRunning;
+            RulesBox.IsEnabled = !isRunning;
+            BoardSizeUserX.IsEnabled = !isRunning;
+            BoardSizeUserY.IsEnabled = !isRunning;
+            ShapeComboBox.IsEnabled = !isRunning;
+            CellColorComboBox.IsEnabled = !isRunning;
+
+            StopButton.IsEnabled = true;
+        }
+
+        private void Start_Click(object sender, RoutedEventArgs e)
+        {
+            _timer.Start();
+            SetSimulationState(true);
+        }
+
+        private void Stop_Click(object sender, RoutedEventArgs e)
+        {
+            _timer.Stop();
+            SetSimulationState(false);
+        } 
         private void Step_Click(object sender, RoutedEventArgs e) => BoardCanvas.Step(_rules);
+
         private void Clear_Click(object sender, RoutedEventArgs e) => BoardCanvas.Clear();
         private void Random_Click(object sender, RoutedEventArgs e) => BoardCanvas.Randomize();
-
         private void Save_Click(object sender, RoutedEventArgs e)
         {
             var dlg = new SaveFileDialog { Filter = "Text file|*.txt" };
             if (dlg.ShowDialog() == true)
+            {
                 BoardCanvas.Save(dlg.FileName);
+            }
         }
 
         private void Load_Click(object sender, RoutedEventArgs e)
         {
             var dlg = new OpenFileDialog { Filter = "Text file|*.txt" };
             if (dlg.ShowDialog() == true)
+            {
                 BoardCanvas.Load(dlg.FileName);
+            }
         }
 
         private void CellSizeBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
@@ -54,8 +90,11 @@ namespace game.Views
             {
                 return;
             }
+
             if (int.TryParse(CellSizeBox.Text, out int size) && size > 0)
+            {
                 BoardCanvas.CellSize = size;
+            }
         }
 
         private void ZoomSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -66,10 +105,9 @@ namespace game.Views
             }
 
             BoardCanvas.Zoom = e.NewValue;
-            BoardCanvas.InvalidateMeasure();  // update size for scrollbars
+            BoardCanvas.InvalidateMeasure();
             BoardCanvas.InvalidateVisual();
 
-            // Reset scroll position to top-left
             BoardScrollViewer.ScrollToHorizontalOffset(0);
             BoardScrollViewer.ScrollToVerticalOffset(0);
         }
@@ -110,7 +148,10 @@ namespace game.Views
 
         private void CellColorComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (BoardCanvas == null) return;
+            if (BoardCanvas == null)
+            {
+                return;
+            }
 
             if (CellColorComboBox.SelectedItem is ComboBoxItem item)
             {

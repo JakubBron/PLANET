@@ -16,7 +16,7 @@ namespace game.Models
 
         private GameConfig cfg = new GameConfig();
         private HashSet<(int x, int y)> _alive = new HashSet<(int x, int y)>();
-
+        public IEnumerable<Cell> Cells => _alive.Select(a => new Cell(a.x, a.y));
         public int Width { get; private set; }
         public int Height { get; private set; }
         public double Density { get; private set; }
@@ -42,7 +42,6 @@ namespace game.Models
             private set { _died = value; OnPropertyChanged(nameof(Died)); }
         }
 
-        public IEnumerable<Cell> Cells => _alive.Select(a => new Cell(a.x, a.y, true));
 
         public Board(int? width = null, int? height = null)
         {
@@ -86,19 +85,6 @@ namespace game.Models
                     }
                 }
             }
-
-            /*
-            Width = width ?? cfg.BoardWidth;
-            Height = height ?? cfg.BoardHeight;
-            for (int x = 0; x < width; x++)
-            {
-                SetAlive(x, 1);
-            }
-
-            for (int y = 0; y < height; y++)
-            {
-                SetAlive(1, y);
-            }*/
         }
 
         public void Step(GameRules rules)
@@ -162,7 +148,6 @@ namespace game.Models
             OnPropertyChanged(nameof(Cells));
         }
 
-        // Zapis i odczyt do pliku
         public void Save(string path)
         {
             using var sw = new StreamWriter(path);

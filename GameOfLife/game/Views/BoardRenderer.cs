@@ -11,22 +11,16 @@ namespace game.Views
         private static GameConfig cfg = new GameConfig();
         private Board _board;
         public Board Board => _board;
-        private int _cellSize = 10;
+        private int _cellSize = cfg.CellSize;
         private bool _isDrawing = false;
         private bool _drawState = true;
+        public Brush CellBrush { get; set; } = cfg.CellBrush;
 
-        public Brush CellBrush { get; set; } = Brushes.LimeGreen;
-        public void SetCellBrush(Brush brush)
-        {
-            CellBrush = brush;
-            InvalidateVisual();
-        }
-
-        public Brush BackgroundBrush { get; set; } = Brushes.Black;
+        public Brush BackgroundBrush { get; set; } = cfg.BackgroundBrush;
         public double Zoom { get; set; } = cfg.Zoom;
 
         // shape name -> shape type (class) is converted automatically by WPF
-        private CellShape shapeOfCellChosenByUser = CellShape.Rectangle;
+        private CellShape shapeOfCellChosenByUser = cfg.DefaultCellShape;
         public CellShape CellShape
         {
             get => shapeOfCellChosenByUser;
@@ -35,12 +29,15 @@ namespace game.Views
                 if (shapeOfCellChosenByUser != value)
                 {
                     shapeOfCellChosenByUser = value;
-                    InvalidateVisual(); // redraw whenever shape changes
+                    InvalidateVisual();
                 }
             }
         }
-
-
+        public void SetCellBrush(Brush brush)
+        {
+            CellBrush = brush;
+            InvalidateVisual();
+        }
         public BoardRenderer()
         {
             _board = new Board();
@@ -48,11 +45,6 @@ namespace game.Views
             MouseDown += OnMouseDown;
             MouseMove += OnMouseMove;
             MouseUp += OnMouseUp;
-        }
-
-        public void SetBoard(Board board)
-        {
-            _board = board;
         }
 
         public void Step(GameRules rules)
@@ -81,8 +73,6 @@ namespace game.Views
             get => _cellSize;
             set { _cellSize = Math.Max(1, value); InvalidateVisual(); }
         }
-
-        
 
         protected override void OnRender(DrawingContext dc)
         {
@@ -173,5 +163,9 @@ namespace game.Views
             return new Size(_board.Width * _cellSize * Zoom, _board.Height * _cellSize * Zoom);
         }
 
+        public void SetBoard(Board newBoard)
+        {
+            _board = newBoard;
+        }
     }
 }

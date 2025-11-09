@@ -13,7 +13,7 @@ namespace game.ViewModels
         private readonly DispatcherTimer _timer;
         private readonly Board _board;
         private GameRules _rules;
-        private readonly GameConfig cfg = new GameConfig();
+        private static readonly GameConfig cfg = new GameConfig();
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -35,7 +35,7 @@ namespace game.ViewModels
 
         public Board Board => _board;
 
-        private double _zoom = 1.0;
+        private double _zoom = cfg.Zoom;
         public double Zoom
         {
             get => _zoom;
@@ -51,10 +51,6 @@ namespace game.ViewModels
                 try
                 {
                     _rules = GameRules.FromString(value);
-                    /*
-                    cfg.Rules = _rules;
-                    cfg.Save();
-                    */
                     OnPropertyChanged();
                 }
                 catch { }
@@ -68,10 +64,6 @@ namespace game.ViewModels
             {
                 if (value > 0)
                 {
-                    /*
-                    cfg.CellSize = value;
-                    cfg.Save();
-                    */
                     OnPropertyChanged();
                 }
             }

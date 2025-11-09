@@ -7,11 +7,11 @@
 
     <DockPanel>
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="5">
-            <Button Content="Start" Style="{StaticResource CommonButtonStyle}" Click="Start_Click"/>
-            <Button Content="Stop" Style="{StaticResource CommonButtonStyle}" Click="Stop_Click"/>
-            <Button Content="Step" Style="{StaticResource CommonButtonStyle}" Click="Step_Click"/>
-            <Button Content="Clear" Style="{StaticResource CommonButtonStyle}" Click="Clear_Click"/>
-            <Button Content="Random" Style="{StaticResource CommonButtonStyle}" Click="Random_Click"/>
+            <Button x:Name="StartButton" Content="Start" Style="{StaticResource CommonButtonStyle}" Click="Start_Click"/>
+            <Button x:Name="StopButton" Content="Stop" Style="{StaticResource CommonButtonStyle}" Click="Stop_Click"/>
+            <Button x:Name="StepButton" Content="Step" Style="{StaticResource CommonButtonStyle}" Click="Step_Click"/>
+            <Button x:Name="ClearButton" Content="Clear" Style="{StaticResource CommonButtonStyle}" Click="Clear_Click"/>
+            <Button x:Name="RandomButton" Content="Random" Style="{StaticResource CommonButtonStyle}" Click="Random_Click"/>
             <Button Content="Save" Style="{StaticResource CommonButtonStyle}" Click="Save_Click"/>
             <Button Content="Load" Style="{StaticResource CommonButtonStyle}" Click="Load_Click"/>
 
