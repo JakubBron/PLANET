@@ -22,20 +22,20 @@ namespace game.Models
         public double Density { get; private set; }
 
         private int _generation = 0;
+        private int _born = 0;
+        private int _died = 0;
         public int Generation
         {
             get => _generation;
             private set { _generation = value; OnPropertyChanged(nameof(Generation)); }
         }
 
-        private int _born = 0;
         public int Born
         {
             get => _born;
             private set { _born = value; OnPropertyChanged(nameof(Born)); }
         }
 
-        private int _died = 0;
         public int Died
         {
             get => _died;
@@ -59,7 +59,6 @@ namespace game.Models
             }
         } 
         public void SetDead(int x, int y) => _alive.Remove((x, y));
-        public bool IsAlive(int x, int y) => _alive.Contains((x, y));
 
         public void Clear()
         {

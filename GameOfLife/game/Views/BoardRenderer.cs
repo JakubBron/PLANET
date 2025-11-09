@@ -10,6 +10,7 @@ namespace game.Views
     {
         private static GameConfig cfg = new GameConfig();
         private Board _board;
+        public Board Board => _board;
         private int _cellSize = 10;
         private bool _isDrawing = false;
         private bool _drawState = true;
@@ -81,7 +82,7 @@ namespace game.Views
             set { _cellSize = Math.Max(1, value); InvalidateVisual(); }
         }
 
-        public Board Board => _board;
+        
 
         protected override void OnRender(DrawingContext dc)
         {

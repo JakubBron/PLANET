@@ -51,7 +51,7 @@
             </ComboBox>
 
             <StackPanel DockPanel.Dock="Right" Margin="5">
-                <TextBlock Text="Simulation Speed (ms per step):" Style="{StaticResource CommonTextStyle}" FontWeight="Bold" Margin="0,10,0,5"/>
+                <TextBlock Text="Simulation Speed:" Style="{StaticResource CommonTextStyle}" FontWeight="Bold" Margin="0,10,0,5"/>
                 <Slider x:Name="SpeedSlider" Minimum="10" Maximum="1000" Value="100" TickFrequency="50" IsSnapToTickEnabled="True" ValueChanged="SpeedSlider_ValueChanged"/>
             </StackPanel>
 
