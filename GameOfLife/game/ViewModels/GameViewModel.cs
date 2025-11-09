@@ -32,6 +32,7 @@ namespace game.ViewModels
             StepCommand = new RelayCommand(_ => Step());
             ClearCommand = new RelayCommand(_ => Clear());
             RandomizeCommand = new RelayCommand(_ => Randomize());
+            PlacePatternCommand = new RelayCommand(_ => PlacePattern());
         }
 
         public Board Board => _board;
@@ -81,5 +82,54 @@ namespace game.ViewModels
         public void Step() => _board.Step(_rules);
         public void Clear() => _board.Clear();
         public void Randomize() => _board.Randomize(_cfg.BoardWidth, _cfg.BoardHeight, _cfg.Density);
+
+        // TODO: refactor placement of patterns
+
+        private int _placementX = 0;
+        public int PlacementX
+        {
+            get => _placementX;
+            set { _placementX = value; OnPropertyChanged(); }
+        }
+
+        private int _placementY = 0;
+        public int PlacementY
+        {
+            get => _placementY;
+            set { _placementY = value; OnPropertyChanged(); }
+        }
+
+        // Selected preset structure
+        private PresetFancyStructures _selectedPreset;
+        public PresetFancyStructures SelectedPreset
+        {
+            get => _selectedPreset;
+            set { _selectedPreset = value; OnPropertyChanged(); }
+        }
+
+        // List of all presets
+        public List<PresetFancyStructures> Presets { get; } = PresetFancyStructures.GetAllPatterns().Values.ToList();
+
+        // Command to place the pattern on the board
+        public ICommand PlacePatternCommand { get; }
+
+        private void PlacePattern()
+        {
+            if (Board == null || SelectedPreset == null) return;
+
+            foreach (var point in SelectedPreset.Points)
+            {
+                int x = (int)point.X + PlacementX;
+                int y = (int)point.Y + PlacementY;
+
+                if (x >= 0 && x < Board.Width && y >= 0 && y < Board.Height)
+                {
+                    Board.SetAlive(x, y);
+                }
+            }
+
+            // Notify view that board changed
+            OnPropertyChanged(nameof(Board));
+        }
     }
 }
