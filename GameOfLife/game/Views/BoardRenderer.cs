@@ -173,7 +173,5 @@ namespace game.Views
             return new Size(_board.Width * _cellSize * Zoom, _board.Height * _cellSize * Zoom);
         }
 
-
-
     }
 }
