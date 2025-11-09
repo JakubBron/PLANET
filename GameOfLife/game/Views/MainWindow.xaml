@@ -61,7 +61,7 @@
             <TextBlock Text="Pattern placement" Style="{StaticResource CommonTextStyle}" VerticalAlignment="Center" Margin="0,10,0,0"/>
             <StackPanel x:Name="PresetPanel"  Orientation="Horizontal" Margin="5">
                 <TextBlock Text="X:" Style="{StaticResource CommonTextStyle}" VerticalAlignment="Center"/>
-                <TextBox x:Name="XTextBox" Style="{StaticResource TextBoxStyle}" Width="40" Text="{Binding PlacementX, UpdateSourceTrigger=PropertyChanged}" TextChanged="XTextBox_TextChanged" />
+                <TextBox x:Name="XTextBox" Style="{StaticResource TextBoxStyle}" Width="40" Text="{Binding PlacementX, UpdateSourceTrigger=PropertyChanged}" />
 
                 <TextBlock Text="Y:" Style="{StaticResource CommonTextStyle}" VerticalAlignment="Center" Margin="5,0,0,0"/>
                 <TextBox x:Name="YTextBox" Style="{StaticResource TextBoxStyle}" Width="40" Text="{Binding PlacementY, UpdateSourceTrigger=PropertyChanged}" />
@@ -93,6 +93,7 @@
                 <TextBlock Text="{Binding Board.Died, StringFormat=Died: \{0\}}" Foreground="Yellow" FontFamily="Consolas"/>
                 <TextBlock Text="{Binding Board.Cells.Count, StringFormat=Cells: \{0\}}" Foreground="Yellow" FontFamily="Consolas"/>
             </StackPanel>
+            <Button Content="Take Screenshot" Style="{StaticResource CommonButtonStyle}" Click="ScreenshotButton_Click" Width="150" Height="30" Margin="10"/>
 
         </StackPanel>
 

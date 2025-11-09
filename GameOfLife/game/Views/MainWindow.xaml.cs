@@ -8,6 +8,8 @@ using game.Models;
 using System.Windows.Media;
 using System.Windows.Data;
 using game.ViewModels;
+using System.IO;
+using System.Windows.Media.Imaging;
 
 namespace game.Views
 {
@@ -177,9 +179,37 @@ namespace game.Views
             }
         }
 
-        private void XTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void ScreenshotButton_Click(object sender, RoutedEventArgs e)
         {
+            try
+            {
+                var width = (int)this.ActualWidth;
+                var height = (int)this.ActualHeight;
 
+                var renderBitmap = new RenderTargetBitmap(width, height, 96d, 96d, PixelFormats.Pbgra32);
+                renderBitmap.Render(this);
+
+                var encoder = new PngBitmapEncoder();
+                encoder.Frames.Add(BitmapFrame.Create(renderBitmap));
+
+                var dlg = new SaveFileDialog
+                {
+                    Filter = "PNG Image|*.png",
+                    FileName = $"GameOfLife_{DateTime.Now:yyyyMMdd_HHmmss}.png"
+                };
+
+                if (dlg.ShowDialog() == true)
+                {
+                    using (var fs = new FileStream(dlg.FileName, FileMode.Create))
+                    {
+                        encoder.Save(fs);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error taking screenshot:\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }
