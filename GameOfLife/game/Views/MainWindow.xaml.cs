@@ -16,7 +16,7 @@ namespace game.Views
         private GameRules _rules;
         private int _newBoardWidth;
         private int _newBoardHeight;
-        private GameConfig cfg = new GameConfig();
+        private readonly GameConfig _cfg = new GameConfig();
         private bool _isSimulationRunning = false;
 
         public MainWindow()
@@ -25,8 +25,8 @@ namespace game.Views
 
             ShapeComboBox.DataContext = BoardCanvas;
             DataContext = BoardCanvas;
-            _rules = cfg.Rules;
-            _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(cfg.SimulationSpeedMs) };
+            _rules = _cfg.Rules;
+            _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(_cfg.SimulationSpeedMs) };
             _timer.Tick += (s, e) => BoardCanvas.Step(_rules);
             SetSimulationState(false);
         }

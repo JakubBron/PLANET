@@ -19,25 +19,29 @@ namespace game.Views
         public Brush BackgroundBrush { get; set; } = cfg.BackgroundBrush;
         public double Zoom { get; set; } = cfg.Zoom;
 
-        // shape name -> shape type (class) is converted automatically by WPF
-        private CellShape shapeOfCellChosenByUser = cfg.DefaultCellShape;
-        public CellShape CellShape
+        private CellShape _shapeOfCellChosenByUser = cfg.DefaultCellShape; 
+        public CellShape CellShape  // shape name -> shape type (class) is converted automatically by WPF
         {
-            get => shapeOfCellChosenByUser;
+            get => _shapeOfCellChosenByUser;
             set
             {
-                if (shapeOfCellChosenByUser != value)
+                if (_shapeOfCellChosenByUser != value)
                 {
-                    shapeOfCellChosenByUser = value;
+                    _shapeOfCellChosenByUser = value;
                     InvalidateVisual();
                 }
             }
         }
-        public void SetCellBrush(Brush brush)
+        public int CellSize
         {
-            CellBrush = brush;
-            InvalidateVisual();
+            get => _cellSize;
+            set { _cellSize = Math.Max(1, value); InvalidateVisual(); }
         }
+        public void SetBoard(Board newBoard)
+        {
+            _board = newBoard;
+        }
+
         public BoardRenderer()
         {
             _board = new Board();
@@ -47,6 +51,9 @@ namespace game.Views
             MouseUp += OnMouseUp;
         }
 
+        /// ======================
+        ///     Game control
+        /// ======================
         public void Step(GameRules rules)
         {
             _board.Step(rules);
@@ -66,18 +73,34 @@ namespace game.Views
         }
 
         public void Save(string path) => _board.Save(path);
-        public void Load(string path) { _board.Load(path); InvalidateVisual(); }
 
-        public int CellSize
+        public void Load(string path)
         {
-            get => _cellSize;
-            set { _cellSize = Math.Max(1, value); InvalidateVisual(); }
+            _board.Load(path); 
+            InvalidateVisual();
+        }
+        protected override Size MeasureOverride(Size availableSize)
+        {
+            return new Size(_board.Width * _cellSize * Zoom, _board.Height * _cellSize * Zoom);
         }
 
+        protected override Size ArrangeOverride(Size finalSize)
+        {
+            return new Size(_board.Width * _cellSize * Zoom, _board.Height * _cellSize * Zoom);
+        }
+
+        
+        /// =========================
+        ///     Screen Rendering
+        /// =========================
+        public void SetCellBrush(Brush brush)
+        {
+            CellBrush = brush;
+            InvalidateVisual();
+        }
         protected override void OnRender(DrawingContext dc)
         {
             base.OnRender(dc);
-
             dc.PushTransform(new ScaleTransform(Zoom, Zoom));
 
             // background
@@ -150,22 +173,6 @@ namespace game.Views
             else _board.SetDead(x, y);
 
             InvalidateVisual();
-        }
-
-
-        protected override Size MeasureOverride(Size availableSize)
-        {
-            return new Size(_board.Width * _cellSize * Zoom, _board.Height * _cellSize * Zoom);
-        }
-
-        protected override Size ArrangeOverride(Size finalSize)
-        {
-            return new Size(_board.Width * _cellSize * Zoom, _board.Height * _cellSize * Zoom);
-        }
-
-        public void SetBoard(Board newBoard)
-        {
-            _board = newBoard;
         }
     }
 }

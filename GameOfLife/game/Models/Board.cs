@@ -14,7 +14,7 @@ namespace game.Models
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
-        private GameConfig cfg = new GameConfig();
+        private readonly GameConfig _cfg = new GameConfig();
         private HashSet<(int x, int y)> _alive = new HashSet<(int x, int y)>();
         public IEnumerable<Cell> Cells => _alive.Select(a => new Cell(a.x, a.y));
         public int Width { get; private set; }
@@ -45,8 +45,8 @@ namespace game.Models
 
         public Board(int? width = null, int? height = null)
         {
-            Width = width ?? cfg.BoardWidth;
-            Height = height ?? cfg.BoardHeight;
+            Width = width ?? _cfg.BoardWidth;
+            Height = height ?? _cfg.BoardHeight;
             Randomize(Width, Height);
         }
 
@@ -69,9 +69,9 @@ namespace game.Models
 
         public void Randomize(int? width = null, int? height = null, double? density = null)
         {
-            Width = width ?? cfg.BoardWidth;
-            Height = height ?? cfg.BoardHeight;
-            Density = density ?? cfg.Density;
+            Width = width ?? _cfg.BoardWidth;
+            Height = height ?? _cfg.BoardHeight;
+            Density = density ?? _cfg.Density;
 
             Clear();
             var rnd = new Random();

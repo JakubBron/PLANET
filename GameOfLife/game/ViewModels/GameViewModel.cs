@@ -13,17 +13,18 @@ namespace game.ViewModels
         private readonly DispatcherTimer _timer;
         private readonly Board _board;
         private GameRules _rules;
-        private static readonly GameConfig cfg = new GameConfig();
+        private static readonly GameConfig _cfg = new GameConfig();
 
         public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged([CallerMemberName] string prop = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
 
         public GameViewModel()
         {
-            _rules = cfg.Rules;
+            _rules = _cfg.Rules;
             _board = new Board();
-            _board.Randomize(cfg.BoardWidth, cfg.BoardHeight, cfg.Density);
+            _board.Randomize(_cfg.BoardWidth, _cfg.BoardHeight, _cfg.Density);
 
-            _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(cfg.SimulationSpeedMs) };
+            _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(_cfg.SimulationSpeedMs) };
             _timer.Tick += (_, _) => Step();
 
             StartCommand = new RelayCommand(_ => Start());
@@ -35,7 +36,7 @@ namespace game.ViewModels
 
         public Board Board => _board;
 
-        private double _zoom = cfg.Zoom;
+        private double _zoom = _cfg.Zoom;
         public double Zoom
         {
             get => _zoom;
@@ -45,7 +46,7 @@ namespace game.ViewModels
         
         public string Rules
         {
-            get => cfg.Rules.ToString();
+            get => _cfg.Rules.ToString();
             set
             {
                 try
@@ -59,7 +60,7 @@ namespace game.ViewModels
 
         public int CellSize
         {
-            get => cfg.CellSize;
+            get => _cfg.CellSize;
             set
             {
                 if (value > 0)
@@ -79,9 +80,6 @@ namespace game.ViewModels
         public void Stop() => _timer.Stop();
         public void Step() => _board.Step(_rules);
         public void Clear() => _board.Clear();
-        public void Randomize() => _board.Randomize(cfg.BoardWidth, cfg.BoardHeight, cfg.Density);
-
-        private void OnPropertyChanged([CallerMemberName] string prop = null)
-            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
+        public void Randomize() => _board.Randomize(_cfg.BoardWidth, _cfg.BoardHeight, _cfg.Density);
     }
 }
