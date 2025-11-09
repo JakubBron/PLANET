@@ -174,13 +174,5 @@ namespace game.Models
                 SetAlive(x, y);
             }
         }
-
-        public void PlacePattern(List<Point> whereToDraw)
-        {
-            foreach (var point in whereToDraw)
-            {
-                SetAlive((int)point.X, (int)point.Y); 
-            }
-        }
     }
 }

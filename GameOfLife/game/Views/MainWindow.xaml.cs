@@ -176,5 +176,10 @@ namespace game.Views
                 BoardCanvas.PlacePattern(item.Content.ToString(), x, y);
             }
         }
+
+        private void XTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
     }
 }

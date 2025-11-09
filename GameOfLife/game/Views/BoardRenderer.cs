@@ -91,35 +91,28 @@ namespace game.Views
 
         public void PlacePattern(string presetName, int xOffset, int yOffset)
         {
-            bool[,] pattern = presetName switch
+            var preset = PresetFancyStructures.GetAllPatterns();
+            bool[,] pattern;
+            try
             {
-                "Block" => new bool[,] { { true, true }, { true, true } },
-                "Beehive" => new bool[,] { { false, true, false }, { true, false, true }, { false, true, false } },
-                "Loaf" => new bool[,] { { false, true, false }, { true, false, true }, { false, true, false }, { false, false, true } },
-                "Blinker" => new bool[,] { { true, true, true } },
-                "Beacon" => new bool[,] { { true, true }, { false, false }, { false, false }, { true, true } },
-                "Glider" => new bool[,] { { false, true, false }, { false, false, true }, { true, true, true } },
-                _ => null
-            };
-
-            List<Point> whereToDraw = new List<Point>();
-
-            if (pattern == null) return;
-
+                pattern = preset[presetName].Pattern;
+            }
+            catch (KeyNotFoundException)
+            {
+                return;
+            }
+            
             for (int y = 0; y < pattern.GetLength(1); y++)
             {
                 for (int x = 0; x < pattern.GetLength(0); x++)
                 {
                     if (pattern[x, y])
                     {
-                        whereToDraw.Add(new Point(x+xOffset, y+yOffset));
+                        _board.SetAlive(x + xOffset, y + yOffset);
                     }
                 }
             }
-            _board.PlacePattern(whereToDraw);
             InvalidateVisual();
-
-
         }
 
         /// =========================

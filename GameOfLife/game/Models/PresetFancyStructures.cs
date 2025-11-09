@@ -14,6 +14,7 @@ namespace game.Models
             Width = pattern.GetLength(0);
             Height = pattern.GetLength(1);
 
+
             Points = new List<Point>();
             for (int y = 0; y < Height; y++)
             {
