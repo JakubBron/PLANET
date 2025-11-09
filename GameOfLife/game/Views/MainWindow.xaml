@@ -73,15 +73,23 @@
 
             <StackPanel x:Name="PresetPanel"  Orientation="Horizontal" Margin="5">
                 <TextBlock Text="X:" VerticalAlignment="Center"/>
-                <TextBox Width="40" Text="{Binding PlacementX, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox x:Name="XTextBox" Width="40" Text="{Binding PlacementX, UpdateSourceTrigger=PropertyChanged}" />
 
                 <TextBlock Text="Y:" VerticalAlignment="Center" Margin="5,0,0,0"/>
-                <TextBox Width="40" Text="{Binding PlacementY, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox x:Name="YTextBox" Width="40" Text="{Binding PlacementY, UpdateSourceTrigger=PropertyChanged}" />
 
                 <TextBlock Text="Pattern:" VerticalAlignment="Center" Margin="5,0,0,0"/>
-                <ComboBox Width="120" ItemsSource="{Binding Presets}"  DisplayMemberPath="Name" SelectedItem="{Binding SelectedPreset}" />
+                <ComboBox x:Name="PresetComboBox" Width="80">
+                    <ComboBoxItem Content="Block" />
+                    <ComboBoxItem Content="Beehive"/>
+                    <ComboBoxItem Content="Loaf"/>
+                    <ComboBoxItem Content="Blinker"/>
+                    <ComboBoxItem Content="Beacon"/>
+                    <ComboBoxItem Content="Glider" />
+                </ComboBox>
 
-                <Button Content="Place Pattern" Command="{Binding PlacePatternCommand}" Margin="5,0,0,0"/>
+
+                <Button Content="Place Pattern" Click="PlacePattern_Click" Margin="5,0,0,0"/>
             </StackPanel>
         </StackPanel>
 

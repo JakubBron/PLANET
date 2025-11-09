@@ -7,6 +7,7 @@ using Microsoft.Win32;
 using game.Models;
 using System.Windows.Media;
 using System.Windows.Data;
+using game.ViewModels;
 
 namespace game.Views
 {
@@ -165,6 +166,14 @@ namespace game.Views
             if (_timer != null)
             {
                 _timer.Interval = TimeSpan.FromMilliseconds(SpeedSlider.Value);
+            }
+        }
+
+        private void PlacePattern_Click(object sender, RoutedEventArgs e)
+        {
+            if (PresetComboBox.SelectedItem is ComboBoxItem item && int.TryParse(XTextBox.Text, out int x) && int.TryParse(YTextBox.Text, out int y))
+            {
+                BoardCanvas.PlacePattern(item.Content.ToString(), x, y);
             }
         }
     }

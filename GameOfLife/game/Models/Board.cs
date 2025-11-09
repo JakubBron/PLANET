@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Input;
 using game.Commands;
@@ -171,6 +172,14 @@ namespace game.Models
                 int x = int.Parse(p[0]);
                 int y = int.Parse(p[1]);
                 SetAlive(x, y);
+            }
+        }
+
+        public void PlacePattern(List<Point> whereToDraw)
+        {
+            foreach (var point in whereToDraw)
+            {
+                SetAlive((int)point.X, (int)point.Y); 
             }
         }
     }
