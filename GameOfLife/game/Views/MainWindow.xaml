@@ -15,24 +15,24 @@
             <Button Content="Save" Style="{StaticResource CommonButtonStyle}" Click="Save_Click"/>
             <Button Content="Load" Style="{StaticResource CommonButtonStyle}" Click="Load_Click"/>
 
-            <TextBlock Text="Cell Size:"  Style="{StaticResource CommonTextStyle}"  VerticalAlignment="Center" Margin="5,0"/>
+            <TextBlock Text="Cell Size:"  Style="{StaticResource CommonTextStyle}" Margin="5,0" VerticalAlignment="Center"/>
             <TextBox Name="CellSizeBox" Style="{StaticResource TextBoxStyle}" Width="40" Text="10" TextChanged="CellSizeBox_TextChanged"/>
 
-            <TextBlock Text="Zoom:" Style="{StaticResource CommonTextStyle}" VerticalAlignment="Center" Margin="5,0"/>
+            <TextBlock Text="Zoom:" Style="{StaticResource CommonTextStyle}" Margin="5,0" RenderTransformOrigin="0.926,0.077" VerticalAlignment="Center"/>
             <Slider Minimum="0.1" Maximum="5" Value="1" Width="100" ValueChanged="ZoomSlider_ValueChanged"/>
-            
-            <TextBlock Text="Rules:" VerticalAlignment="Center" Margin="5,0"/>
+
+            <TextBlock Text="Rules:" Style="{StaticResource CommonTextStyle}" Margin="5,0" VerticalAlignment="Center"/>
             <TextBox Name="RulesBox" Style="{StaticResource TextBoxStyle}" Width="60" Text="B3/S23" TextChanged="RulesBox_TextChanged"/>
 
-            <TextBlock Text="Board size: "  Style="{StaticResource CommonTextStyle}"/>
+            <TextBlock Text="Board size:"  Style="{StaticResource CommonTextStyle}" VerticalAlignment="Center"/>
             <TextBox x:Name="BoardSizeUserX" Style="{StaticResource TextBoxStyle}" Width="60" Text="100" TextChanged="BoardSizeBox_XValueChanged"/>
-            <TextBlock Text="x" Style="{StaticResource CommonTextStyle}"/>
+            <TextBlock Text="x" Style="{StaticResource CommonTextStyle}" VerticalAlignment="Center"/>
             <TextBox x:Name="BoardSizeUserY" Style="{StaticResource TextBoxStyle}" Width="60" Text="100" TextChanged="BoardSizeBox_YValueChanged"/>
-            <Button x:Name="ResizeButton" Style="{StaticResource CommonButtonStyle}" Content="Resize" Click="ResizeButton_OnClick"/>
+            <Button x:Name="ResizeButton" Style="{StaticResource CommonButtonStyle}" Content="Resize" Click="ResizeButton_OnClick" Width="70"/>
         </StackPanel>
 
         <StackPanel DockPanel.Dock="Right" Margin="5">
-            <TextBlock Text="Cell Shape:" Style="{StaticResource CommonTextStyle}" FontWeight="Bold" Margin="0,0,0,5"/>
+            <TextBlock Text="Cell Shape" Style="{StaticResource CommonTextStyle}" FontWeight="Bold" Margin="0,0,0,5"/>
             <ComboBox x:Name="ShapeComboBox"
                 SelectedValue="{Binding Path=CellShape}"
                 SelectedValuePath="Content">
@@ -41,7 +41,7 @@
                 <ComboBoxItem Content="Triangle"/>
             </ComboBox>
 
-            <TextBlock Text="Cell Color:" Style="{StaticResource CommonTextStyle}" FontWeight="Bold" Margin="0,10,0,5"/>
+            <TextBlock Text="Cell Color" Style="{StaticResource CommonTextStyle}" FontWeight="Bold" Margin="0,10,0,5"/>
             <ComboBox x:Name="CellColorComboBox" SelectionChanged="CellColorComboBox_SelectionChanged">
                 <ComboBoxItem Content="LimeGreen" IsSelected="True"/>
                 <ComboBoxItem Content="Red"/>
@@ -51,7 +51,7 @@
             </ComboBox>
 
             <StackPanel DockPanel.Dock="Right" Margin="5">
-                <TextBlock Text="Simulation Speed:" Style="{StaticResource CommonTextStyle}" FontWeight="Bold" Margin="0,10,0,5"/>
+                <TextBlock Text="Simulation Speed" Style="{StaticResource CommonTextStyle}" FontWeight="Bold" Margin="0,10,0,5"/>
                 <Slider x:Name="SpeedSlider" Minimum="10" Maximum="1000" Value="100" TickFrequency="50" IsSnapToTickEnabled="True" ValueChanged="SpeedSlider_ValueChanged"/>
             </StackPanel>
 
