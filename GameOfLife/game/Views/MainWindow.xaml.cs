@@ -31,6 +31,8 @@ namespace game.Views
             _rules = _cfg.Rules;
             _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(_cfg.SimulationSpeedMs) };
             _timer.Tick += (s, e) => BoardCanvas.Step(_rules);
+            SoundCheckbox.Checked += (s, e) => BoardCanvas.PlaySound = true;
+            SoundCheckbox.Unchecked += (s, e) => BoardCanvas.PlaySound = false;
             SetSimulationState(false);
         }
 
@@ -50,6 +52,7 @@ namespace game.Views
             BoardSizeUserY.IsEnabled = !isRunning;
             ShapeComboBox.IsEnabled = !isRunning;
             CellColorComboBox.IsEnabled = !isRunning;
+            PlacePatternButton.IsEnabled = !isRunning;
 
             StopButton.IsEnabled = true;
         }

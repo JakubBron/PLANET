@@ -9,6 +9,7 @@
                 <ResourceDictionary Source="Styles/FontStyles.xaml"/>
                 <ResourceDictionary Source="Styles/ButtonStyles.xaml"/>
                 <ResourceDictionary Source="Styles/MouseOverStyles.xaml"/>
+                <ResourceDictionary Source="Styles/CommonCheckboxStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

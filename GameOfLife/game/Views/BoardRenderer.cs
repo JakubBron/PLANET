@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Media;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using game.Commands;
@@ -15,10 +16,9 @@ namespace game.Views
         private bool _isDrawing = false;
         private bool _drawState = true;
         public Brush CellBrush { get; set; } = cfg.CellBrush;
-
         public Brush BackgroundBrush { get; set; } = cfg.BackgroundBrush;
         public double Zoom { get; set; } = cfg.Zoom;
-
+        private readonly SoundPlayer _soundPlayer = new SoundPlayer("./SoundEffects/click.wav");
         private CellShape _shapeOfCellChosenByUser = cfg.DefaultCellShape; 
         public CellShape CellShape  // shape name -> shape type (class) is converted automatically by WPF
         {
@@ -36,6 +36,15 @@ namespace game.Views
         {
             get => _cellSize;
             set { _cellSize = Math.Max(1, value); InvalidateVisual(); }
+        }
+        public bool PlaySound
+        {
+            get => _board?.PlaySound ?? false;
+            set
+            {
+                if (_board != null)
+                    _board.PlaySound = value;
+            }
         }
         public void SetBoard(Board newBoard)
         {
@@ -160,6 +169,19 @@ namespace game.Views
                         break;
                 }
             }
+            if (_board.PlaySound)
+            {
+                try
+                {
+                    var r = new Random();
+                    int freq = 300 + ((r.Next()%100 + r.Next()%200) * 7) % 500;
+                    Console.Beep(freq, 3);
+                }
+                catch (Exception e)
+                {
+                    _board.PlaySound = false;
+                }
+            }
 
             dc.Pop();
         }
@@ -174,11 +196,23 @@ namespace game.Views
 
         private void OnMouseMove(object sender, MouseEventArgs e)
         {
-            if (!_isDrawing) return;
+            if (!_isDrawing)
+            {
+                return;
+            }
 
-            if (e.LeftButton == MouseButtonState.Pressed) _drawState = false;
-            else if (e.RightButton == MouseButtonState.Pressed) _drawState = true;
-            else return;
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                _drawState = false;
+            }
+            else if (e.RightButton == MouseButtonState.Pressed)
+            {
+                _drawState = true;
+            }
+            else
+            {
+                return;
+            }
 
             HandleMouse(e.GetPosition(this));
         }
@@ -194,8 +228,14 @@ namespace game.Views
             int x = (int)(p.X / (_cellSize * Zoom));
             int y = (int)(p.Y / (_cellSize * Zoom));
 
-            if (_drawState) _board.SetAlive(x, y);
-            else _board.SetDead(x, y);
+            if (_drawState)
+            {
+                _board.SetAlive(x, y);
+            }
+            else
+            {
+                _board.SetDead(x, y);
+            }
 
             InvalidateVisual();
         }

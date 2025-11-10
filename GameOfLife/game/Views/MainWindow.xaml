@@ -39,7 +39,9 @@
             <Button x:Name="ResizeButton" Style="{StaticResource CommonButtonStyle}" Content="Resize" Click="ResizeButton_OnClick" Width="70"/>
         </StackPanel>
 
-        <StackPanel DockPanel.Dock="Right" Margin="5">
+        <StackPanel DockPanel.Dock="Right" HorizontalAlignment="Stretch" Margin="5">
+            <CheckBox x:Name="SoundCheckbox" Style="{StaticResource CommonCheckboxStyle}" Content="Play Sound when cell is created" IsChecked="True" ToolTip="Play a note when a cell is drawn" Margin="0,0,0,5"/>
+            
             <TextBlock Text="Cell Shape" Style="{StaticResource CommonTextStyle}" FontWeight="Bold" Margin="0,0,0,5"/>
             <ComboBox x:Name="ShapeComboBox"
                 SelectedValue="{Binding CellShape}"
@@ -75,14 +77,20 @@
                     <ComboBoxItem Content="Beacon"/>
                     <ComboBoxItem Content="Glider" />
                 </ComboBox>
-                <Button Content="Place Pattern" Style="{StaticResource CommonButtonStyle}" Click="PlacePattern_Click" Margin="5,0,0,0"/>
+                <Button x:Name="PlacePatternButton" Content="Place Pattern" Style="{StaticResource CommonButtonStyle}" Click="PlacePattern_Click" Margin="5,0,0,0"/>
             </StackPanel>
 
             <StackPanel DockPanel.Dock="Right" Margin="5">
                 <TextBlock Text="Simulation Speed" Style="{StaticResource CommonTextStyle}" FontWeight="Bold" Margin="0,10,0,5"/>
                 <Slider x:Name="SpeedSlider" Minimum="10" Maximum="1000" Value="100" TickFrequency="50" IsSnapToTickEnabled="True" ValueChanged="SpeedSlider_ValueChanged"/>
-                <TextBlock Style="{StaticResource CommonTextStyle}" FontWeight="Bold" HorizontalAlignment="Left"><Run Language="pl-pl" Text="fast"/></TextBlock>
-                <TextBlock Style="{StaticResource CommonTextStyle}" FontWeight="Bold" HorizontalAlignment="Right" VerticalAlignment="Top"><Run Language="pl-pl" Text="slow"/></TextBlock>
+                <Grid Margin="0,2,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="fast" Style="{StaticResource CommonTextStyle}" FontWeight="Bold" Grid.Column="0" HorizontalAlignment="Left"/>
+                    <TextBlock Text="slow" Style="{StaticResource CommonTextStyle}" FontWeight="Bold" Grid.Column="1" HorizontalAlignment="Right"/>
+                </Grid>
             </StackPanel>
 
             <StackPanel x:Name="StatsPanel" Orientation="Vertical"
@@ -94,7 +102,6 @@
                 <TextBlock Text="{Binding Board.Cells.Count, StringFormat=Cells: \{0\}}" Foreground="Yellow" FontFamily="Consolas"/>
             </StackPanel>
             <Button Content="Take Screenshot" Style="{StaticResource CommonButtonStyle}" Click="ScreenshotButton_Click" Width="150" Height="30" Margin="10"/>
-
         </StackPanel>
 
         <ScrollViewer x:Name="BoardScrollViewer" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">

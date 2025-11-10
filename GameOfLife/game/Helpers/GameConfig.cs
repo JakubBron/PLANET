@@ -15,6 +15,7 @@ namespace game.Commands
         public int CellSize { get; set; } = 10;
         public double SimulationSpeedMs { get; set; } = 100;
         public int Zoom { get; set; } = 1;
+        public bool DefaultPlaySoundSetting { get; set; } = true;
         public GameRules Rules { get; set; } = GameRules.FromString("B2/S23");
 
         public Brush CellBrush = Brushes.LimeGreen;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -25,6 +26,7 @@ namespace game.Models
         private int _generation = 0;
         private int _born = 0;
         private int _died = 0;
+        private bool _playSound = true;
         public int Generation
         {
             get => _generation;
@@ -41,6 +43,12 @@ namespace game.Models
         {
             get => _died;
             private set { _died = value; OnPropertyChanged(nameof(Died)); }
+        }
+
+        public bool PlaySound
+        {
+            get => _playSound;
+            set { _playSound = value; }
         }
 
 
