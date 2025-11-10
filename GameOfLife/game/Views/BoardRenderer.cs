@@ -132,6 +132,43 @@ namespace game.Views
             CellBrush = brush;
             InvalidateVisual();
         }
+
+
+        private void DrawStats(DrawingContext dc)
+        {
+            if (_board == null) return;
+
+            var stats = new List<string>
+            {
+                $"Generation: {_board.Generation}",
+                $"Born: {_board.Born}",
+                $"Died: {_board.Died}",
+                $"Cells: {_board.Cells.Count()}"
+            };
+
+            var brush = Brushes.Yellow;
+            var typeface = new Typeface("Consolas");
+            double fontSize = 12;
+            double yOffset = 5;
+            double xOffset = 5;
+
+            foreach (var line in stats)
+            {
+                var formattedText = new FormattedText(
+                    line,
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    FlowDirection.LeftToRight,
+                    typeface,
+                    fontSize,
+                    brush,
+                    1.0);
+
+                dc.DrawText(formattedText, new Point(xOffset, yOffset));
+                yOffset += formattedText.Height + 2;
+            }
+        }
+
+
         protected override void OnRender(DrawingContext dc)
         {
             base.OnRender(dc);
@@ -169,6 +206,9 @@ namespace game.Views
                         break;
                 }
             }
+
+            DrawStats(dc);
+
             if (_board.PlaySound)
             {
                 try

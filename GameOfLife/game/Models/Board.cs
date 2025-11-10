@@ -7,6 +7,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Input;
+using System.Windows.Shapes;
 using game.Commands;
 
 namespace game.Models
@@ -56,6 +57,8 @@ namespace game.Models
         {
             Width = width ?? _cfg.BoardWidth;
             Height = height ?? _cfg.BoardHeight;
+            Width = Math.Max(Width, _cfg.MinBoardWidth);
+            Height = Math.Max(Height, _cfg.MinBoardHeight);
             Randomize(Width, Height);
         }
 

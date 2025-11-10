@@ -92,15 +92,6 @@
                     <TextBlock Text="slow" Style="{StaticResource CommonTextStyle}" FontWeight="Bold" Grid.Column="1" HorizontalAlignment="Right"/>
                 </Grid>
             </StackPanel>
-
-            <StackPanel x:Name="StatsPanel" Orientation="Vertical"
-                        HorizontalAlignment="Left"
-                        Background="#80000000" Margin="5" Width="178">
-                <TextBlock Text="{Binding Board.Generation, StringFormat=Generation: \{0\}}" Foreground="Yellow" FontFamily="Consolas"/>
-                <TextBlock Text="{Binding Board.Born, StringFormat=Born: \{0\}}" Foreground="Yellow" FontFamily="Consolas"/>
-                <TextBlock Text="{Binding Board.Died, StringFormat=Died: \{0\}}" Foreground="Yellow" FontFamily="Consolas"/>
-                <TextBlock Text="{Binding Board.Cells.Count, StringFormat=Cells: \{0\}}" Foreground="Yellow" FontFamily="Consolas"/>
-            </StackPanel>
             <Button Content="Take Screenshot" Style="{StaticResource CommonButtonStyle}" Click="ScreenshotButton_Click" Width="150" Height="30" Margin="10"/>
         </StackPanel>
 
