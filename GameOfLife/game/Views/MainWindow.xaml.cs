@@ -120,7 +120,14 @@ namespace game.Views
 
         private void RulesBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
-            _rules = GameRules.FromString(RulesBox.Text);
+            try
+            {
+                _rules = GameRules.FromString(RulesBox.Text);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void ResizeButton_OnClick(object sender, RoutedEventArgs e)
