@@ -7,16 +7,19 @@ namespace game.Models
         public HashSet<int> Birth { get; set; } = new HashSet<int>();
         public HashSet<int> Survival { get; set; } = new HashSet<int>();
 
-        public GameRules()
+        public GameRules(bool defaultRules = true)
         {
-            Birth.Add(2);
-            Survival.Add(2);
-            Survival.Add(3);
+            if (defaultRules)
+            {
+                Birth.Add(2);
+                Survival.Add(2);
+                Survival.Add(3);
+            }
         }
 
         public static GameRules FromString(string s)
         {
-            var rules = new GameRules();
+            var rules = new GameRules(false);
             var parts = s.Split('/');
             foreach (var p in parts)
             {
@@ -25,7 +28,7 @@ namespace game.Models
                 else if (p.StartsWith("S"))
                     foreach (var c in p.Substring(1)) rules.Survival.Add(c - '0');
             }
-            return rules;
+                return rules;
         }
 
         public override string ToString()

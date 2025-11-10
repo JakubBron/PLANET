@@ -4,7 +4,7 @@
             xmlns:local="clr-namespace:game.Views"
             xmlns:vm="clr-namespace:game.ViewModels"
             xmlns:av="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="av" x:Class="game.Views.MainWindow"
-            Title="Game of Life" Height="800" Width="1200">
+            Title="Game of Life" Height="800" Width="1200" Background="#f0f5f1">
 
     <Window.Resources>
         <vm:GameViewModel x:Key="GameVM" />

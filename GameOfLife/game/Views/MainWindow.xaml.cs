@@ -120,11 +120,7 @@ namespace game.Views
 
         private void RulesBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
-            try
-            {
-                _rules = GameRules.FromString(RulesBox.Text);
-            }
-            catch { /* ignore invalid input */ }
+            _rules = GameRules.FromString(RulesBox.Text);
         }
 
         private void ResizeButton_OnClick(object sender, RoutedEventArgs e)
