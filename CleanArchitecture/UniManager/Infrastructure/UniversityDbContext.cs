@@ -6,16 +6,18 @@ using System.Threading.Tasks;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Data
+namespace Infrastructure
 {
-    public class UniversityDbContext: DbContext
+    public class UniversityDbContext : DbContext
     {
         public UniversityDbContext(DbContextOptions<UniversityDbContext> options) : base(options)
         {
         }
 
         public DbSet<Enrollment> Enrollmenty => Set<Enrollment>();
-        public DbSet<Gabinet> Gabinety => Set<Gabinet>();   // opcjonalnie, tabela będzie tak czy siak. DbSet ułatwi dostęp. Na razie zostaje
+
+        public DbSet<Gabinet> Gabinety => Set<Gabinet>(); // opcjonalnie, tabela będzie tak czy siak. DbSet ułatwi dostęp. Na razie zostaje
+
         public DbSet<Kurs> Kursy => Set<Kurs>();
         public DbSet<LicznikIndeksow> LicznikiIndeksow => Set<LicznikIndeksow>();
         public DbSet<Profesor> Profesorzy => Set<Profesor>();
@@ -58,13 +60,15 @@ namespace Infrastructure.Data
             modelBuilder.Entity<Kurs>()
                 .HasOne(k => k.Prowadzacy)
                 .WithMany(p => p.ProwadzoneKursy)
-                .HasForeignKey(k => k.ProfesorId);
+                .HasForeignKey(k => k.ProfesorId)
+                .OnDelete(DeleteBehavior.Restrict); // <- zmienione z CASCADE
 
             // ===== Kurs - Wydzial (one-to-many) =====
             modelBuilder.Entity<Kurs>()
                 .HasOne(k => k.Wydzial)
                 .WithMany(w => w.Kursy)
-                .HasForeignKey(k => k.WydzialId);
+                .HasForeignKey(k => k.WydzialId)
+                .OnDelete(DeleteBehavior.Restrict); // <- zmienione z CASCADE
 
             // ===== Profesor - Wydzial (one-to-many) =====
             modelBuilder.Entity<Profesor>()
@@ -102,7 +106,5 @@ namespace Infrastructure.Data
                 .Property(l => l.AktualnaWartosc)
                 .IsRequired();
         }
-
-
     }
 }
