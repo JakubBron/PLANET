@@ -4,7 +4,7 @@ using Application.Services;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
-namespace UI // or Application namespace
+namespace Application // or Application namespace
 {
     public static class ServiceCollectionExtensions
     {

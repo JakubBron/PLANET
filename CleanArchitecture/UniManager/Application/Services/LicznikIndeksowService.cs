@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Application.Interfaces;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Application.Services
 {
@@ -170,7 +171,7 @@ namespace Application.Services
                 .SingleOrDefaultAsync(l => l.Prefix == prefix);
             if (licznik == null)
                 throw new InvalidOperationException($"Prefiks '{prefix}' nie istnieje.");
-            
+
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
@@ -181,10 +182,10 @@ namespace Application.Services
                     await _context.SaveChangesAsync();
                 }
             }
-            catch
+            catch(Exception e)
             {
                 transaction.Rollback();
-                throw;
+                throw e;
             }
         }
     }

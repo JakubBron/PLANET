@@ -4,7 +4,6 @@ using Domain.Entities;
 using Domain.ValueObjects;
 using Microsoft.Extensions.DependencyInjection;
 using Application;
-using UI;
 
 class Program
 {
@@ -34,6 +33,8 @@ class Program
             Console.WriteLine("4. Lista kursów");
             Console.WriteLine("5. Lista liczników");
             Console.WriteLine("6. Usuń studenta / profesora / kurs");
+            Console.WriteLine("7. Kursy studenta");
+            Console.WriteLine("8. Stwórz studenta");
             Console.WriteLine("0. Wyjście");
             Console.Write("Wybierz opcję: ");
 
@@ -109,6 +110,93 @@ class Program
                     }
                     Console.ReadKey();
                     break;
+
+                case "7":
+                    var allStudents = await studentService.GetAllStudentsAsync();
+                    if (!allStudents.Any())
+                    {
+                        Console.WriteLine("Brak studenta.");
+                        Console.ReadKey();
+                        break;
+                    }
+
+                    Console.WriteLine("Podaj ID studenta:");
+                    foreach (var s in allStudents)
+                        Console.WriteLine($"{s.Id}: {s.Imie} {s.Nazwisko}, {s.IndeksUczelniany}");
+
+                    if (!int.TryParse(Console.ReadLine(), out int studentId))
+                    {
+                        Console.WriteLine("Niepoprawne ID.");
+                        Console.ReadKey();
+                        break;
+                    }
+
+                    var studentEnrollments = await sp.GetRequiredService<IEnrollmentService>()
+                        .GetAllEnrollmentsAsync();
+
+                    var studentEnr = studentEnrollments
+                        .Where(e => e.StudentId == studentId)
+                        .ToList();
+
+                    if (!studentEnr.Any())
+                    {
+                        Console.WriteLine("Student nie jest zapisany do żadnego kursu.");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Kursy dla studenta {studentId}:");
+                        foreach (var e in studentEnr)
+                        {
+                            Console.WriteLine($"Kurs: {e.Kurs?.Nazwa ?? "Unknown"} ({e.Kurs?.Kod ?? "?"}), Semestr: {e.Semestr}, Ocena: {(e.Ocena.HasValue ? e.Ocena.ToString() : "N/A")}");
+                        }
+                    }
+                    Console.ReadKey();
+                    break;
+
+                case "8":
+                    Console.Write("Imię: ");
+                    var imie = Console.ReadLine();
+
+                    Console.Write("Nazwisko: ");
+                    var nazwisko = Console.ReadLine();
+
+                    Console.Write("Rok studiów (liczba): ");
+                    if (!int.TryParse(Console.ReadLine(), out int rokStudiow))
+                    {
+                        Console.WriteLine("Niepoprawny rok studiów.");
+                        Console.ReadKey();
+                        break;
+                    }
+
+                    Console.Write("Ulica: ");
+                    var ulica = Console.ReadLine();
+
+                    Console.Write("Miasto: ");
+                    var miasto = Console.ReadLine();
+
+                    Console.Write("Kod pocztowy: ");
+                    var kod = Console.ReadLine();
+
+                    var adres = new Adres
+                    {
+                        Ulica = ulica,
+                        Miasto = miasto,
+                        KodPocztowy = kod
+                    };
+
+                    try
+                    {
+                        var newStudent = await studentService.CreateStudentAsync(imie, nazwisko, rokStudiow, adres);
+                        Console.WriteLine($"Student utworzony! ID: {newStudent.Id}, Indeks: {newStudent.IndeksUczelniany}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Błąd podczas tworzenia studenta: {ex.Message}");
+                    }
+                    Console.ReadKey();
+                    break;
+
+
 
                 case "0":
                     return;

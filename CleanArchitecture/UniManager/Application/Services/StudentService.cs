@@ -83,12 +83,20 @@ namespace Application.Services
         public async Task DeleteStudentAsync(int id)
         {
             var student = await _context.Studenci.FindAsync(id);
+            await _context.SaveChangesAsync();
             if (student == null) return;
 
             var numer = student.IndeksUczelniany;
             if (numer != null)
             {
-                _licznikIndeksowService.DecrementIfLast(numer);
+                try
+                {
+                    _licznikIndeksowService.DecrementIfLast(numer);
+                }
+                catch(Exception e)
+                {
+                    throw e;
+                }
             }
 
             _context.Studenci.Remove(student);
