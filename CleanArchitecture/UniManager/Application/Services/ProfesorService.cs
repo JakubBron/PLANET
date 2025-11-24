@@ -17,10 +17,8 @@ namespace Application.Services
             _licznikIndeksowService = licznikIndeksowService;
         }
 
-        // CREATE
         public async Task<Profesor> CreateProfesorAsync(string imie, string nazwisko, string tytulNaukowy, Adres adres, int wydzialId, int? gabinetId, string prefix = "P")
         {
-            //using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
                 int numer = await _licznikIndeksowService.GetNextAsync(prefix);
@@ -48,17 +46,14 @@ namespace Application.Services
 
                 _context.Profesorzy.Add(profesor);
                 await _context.SaveChangesAsync();
-                //await transaction.CommitAsync();
                 return profesor;
             }
             catch(Exception e)
             {
-                //transaction.Rollback();
                 throw e;
             }
         }
 
-        // READ ALL
         public async Task<List<Profesor>> GetAllProfesorzyAsync()
         {
             return await _context.Profesorzy
@@ -67,7 +62,6 @@ namespace Application.Services
                 .ToListAsync();
         }
 
-        // READ BY ID
         public async Task<Profesor?> GetProfesorByIdAsync(int id)
         {
             return await _context.Profesorzy
@@ -76,7 +70,6 @@ namespace Application.Services
                 .SingleOrDefaultAsync(p => p.Id == id);
         }
 
-        // UPDATE
         public async Task<Profesor?> UpdateProfesorAsync(int id, string? imie = null, string? nazwisko = null, string? tytulNaukowy = null, Adres? adres = null, int? wydzialId = null, int? gabinetId = null)
         {
             var profesor = await _context.Profesorzy.FindAsync(id);
@@ -105,7 +98,6 @@ namespace Application.Services
             return profesor;
         }
 
-        // DELETE
         public async Task DeleteProfesorAsync(int id)
         {
             var profesor = await _context.Profesorzy.FindAsync(id);
@@ -123,10 +115,6 @@ namespace Application.Services
             {
                 _licznikIndeksowService.DecrementIfLast(numer);
             }
-
-            
-            
-
             _context.Profesorzy.Remove(profesor);
             await _context.SaveChangesAsync();
         }

@@ -27,7 +27,6 @@ namespace Application.Services
             return enrollment;
         }
 
-        // Assign or update a student's grade for a specific course
         public async Task<Enrollment?> UpdateGradeAsync(int studentId, int kursId, double ocena)
         {
             var enrollment = await _context.Enrollmenty
@@ -40,7 +39,6 @@ namespace Application.Services
             return enrollment;
         }
 
-        // Update semester for a specific enrollment
         public async Task<Enrollment?> UpdateSemesterAsync(int enrollmentId, int semestr)
         {
             var enrollment = await _context.Enrollmenty.FindAsync(enrollmentId);
@@ -51,8 +49,6 @@ namespace Application.Services
             return enrollment;
         }
 
-
-        // Read enrollments
         public async Task<List<Enrollment>> GetAllEnrollmentsAsync()
         {
             return await _context.Enrollmenty
@@ -69,7 +65,6 @@ namespace Application.Services
                 .SingleOrDefaultAsync(e => e.Id == enrollmentId);
         }
 
-        // Delete enrollment
         public async Task DeleteEnrollmentAsync(int enrollmentId)
         {
             var enrollment = await _context.Enrollmenty.FindAsync(enrollmentId);

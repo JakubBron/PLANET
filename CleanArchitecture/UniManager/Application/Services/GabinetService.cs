@@ -14,7 +14,6 @@ namespace Application.Services
             _context = context;
         }
 
-        // CREATE
         public async Task<Gabinet> CreateGabinetAsync(string numerGabinetu, int? profesorId = null)
         {
             var gabinet = new Gabinet
@@ -41,7 +40,6 @@ namespace Application.Services
             return gabinet;
         }
 
-        // READ ALL
         public async Task<List<Gabinet>> GetAllGabinetyAsync()
         {
             return await _context.Gabinety
@@ -49,7 +47,6 @@ namespace Application.Services
                 .ToListAsync();
         }
 
-        // READ BY ID
         public async Task<Gabinet?> GetGabinetByIdAsync(int id)
         {
             return await _context.Gabinety
@@ -57,7 +54,6 @@ namespace Application.Services
                 .SingleOrDefaultAsync(g => g.Id == id);
         }
 
-        // UPDATE
         public async Task<Gabinet?> UpdateGabinetAsync(int id, string? numerGabinetu = null, int? profesorId = null)
         {
             var gabinet = await _context.Gabinety.FindAsync(id);
@@ -78,7 +74,6 @@ namespace Application.Services
             return gabinet;
         }
 
-        // DELETE
         public async Task DeleteGabinetAsync(int id)
         {
             var gabinet = await _context.Gabinety.FindAsync(id);

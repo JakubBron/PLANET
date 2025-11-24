@@ -14,7 +14,6 @@ namespace Application.Services
             _context = context;
         }
 
-        // CREATE
         public async Task<Wydzial> CreateWydzialAsync(string nazwa)
         {
             var wydzial = new Wydzial
@@ -27,7 +26,6 @@ namespace Application.Services
             return wydzial;
         }
 
-        // READ ALL
         public async Task<List<Wydzial>> GetAllWydzialyAsync()
         {
             return await _context.Wydzialy
@@ -35,8 +33,6 @@ namespace Application.Services
                 .Include(w => w.Kursy)
                 .ToListAsync();
         }
-
-        // READ BY ID
         public async Task<Wydzial?> GetWydzialByIdAsync(int id)
         {
             return await _context.Wydzialy
@@ -45,7 +41,6 @@ namespace Application.Services
                 .SingleOrDefaultAsync(w => w.Id == id);
         }
 
-        // UPDATE
         public async Task<Wydzial?> UpdateWydzialAsync(int id, string? nazwa = null)
         {
             var wydzial = await _context.Wydzialy.FindAsync(id);
@@ -57,7 +52,6 @@ namespace Application.Services
             return wydzial;
         }
 
-        // DELETE
         public async Task DeleteWydzialAsync(int id)
         {
             try

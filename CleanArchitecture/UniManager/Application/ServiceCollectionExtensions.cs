@@ -4,7 +4,7 @@ using Application.Services;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application // or Application namespace
+namespace Application
 {
     public static class ServiceCollectionExtensions
     {
@@ -17,7 +17,6 @@ namespace Application // or Application namespace
                 options.UseSqlServer(context.Database.GetConnectionString());
             });
 
-            // Register all your application services
             services.AddScoped<ILicznikIndeksowService, LicznikIndeksowService>();
             services.AddScoped<IStudentService, StudentService>();
             services.AddScoped<IStudentStudiowMgrService, StudentStudiowMgrService>();
@@ -27,7 +26,6 @@ namespace Application // or Application namespace
             services.AddScoped<IWydzialService, WydzialService>();
             services.AddScoped<IGabinetService, GabinetService>();
 
-            // Register your generator
             services.AddScoped<BogusGenerator>();
 
             return services;

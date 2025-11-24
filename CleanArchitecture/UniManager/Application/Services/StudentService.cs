@@ -17,10 +17,8 @@ namespace Application.Services
             _licznikIndeksowService = licznikIndeksowService;
         }
 
-        // CREATE
         public async Task<Student> CreateStudentAsync(string imie, string nazwisko, int rokStudiow, Adres adres, string prefix="S")
         {
-            //using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
                 int numer = await _licznikIndeksowService.GetNextAsync(prefix);
@@ -37,26 +35,21 @@ namespace Application.Services
 
                 _context.Studenci.Add(student);
                 await _context.SaveChangesAsync();
-                //await transaction.CommitAsync();
 
                 return student;
             }
-            catch
+            catch(Exception e)
             {
-                //await transaction.RollbackAsync();
-                throw;
+                throw e;
             }
         }
 
-        // READ ALL
         public async Task<List<Student>> GetAllStudentsAsync()
         {
             return await _context.Studenci
                 .Include(s => s.AdresZamieszkania)
                 .ToListAsync();
         }
-
-        // READ BY ID
         public async Task<Student?> GetStudentByIdAsync(int id)
         {
             return await _context.Studenci
@@ -64,7 +57,6 @@ namespace Application.Services
                 .SingleOrDefaultAsync(s => s.Id == id);
         }
 
-        // UPDATE
         public async Task<Student?> UpdateStudentAsync(int id, string? imie = null, string? nazwisko = null, int? rokStudiow = null, Adres? adres = null)
         {
             var student = await _context.Studenci.FindAsync(id);
@@ -79,7 +71,6 @@ namespace Application.Services
             return student;
         }
 
-        // DELETE
         public async Task DeleteStudentAsync(int id)
         {
             var student = await _context.Studenci.FindAsync(id);

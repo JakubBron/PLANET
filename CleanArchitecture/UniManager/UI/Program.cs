@@ -9,7 +9,6 @@ class Program
 {
     static async Task Main(string[] args)
     {
-        // Setup DI
         var services = new ServiceCollection();
         services.AddApplicationServices();
 
@@ -323,7 +322,6 @@ class Program
                     var ginput2 = Console.ReadLine();
                     int? newGid = int.TryParse(ginput2, out var gparsed) ? gparsed : null;
 
-                    // adres optional
                     Console.Write("Zmienić adres? (t/n): ");
                     var adr = Console.ReadLine();
 

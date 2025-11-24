@@ -17,10 +17,8 @@ namespace Application.Services
             _licznikIndeksowService = licznikIndeksowService;
         }
 
-        // CREATE
         public async Task<StudentStudiowMgr> CreateStudentMgrAsync(string imie, string nazwisko, int rokStudiow, Adres adres, string tematPracy, int promotorId, string prefix="S")
         {
-            //using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
                 var promotor = await _context.Profesorzy.FindAsync(promotorId);
@@ -44,18 +42,14 @@ namespace Application.Services
 
                 _context.Studenci.Add(student);
                 await _context.SaveChangesAsync();
-                //await transaction.CommitAsync();
-
                 return student;
             }
-            catch
+            catch(Exception e)
             {
-                //await transaction.RollbackAsync();
-                throw;
+                throw e;
             }
         }
 
-        // READ ALL
         public async Task<List<StudentStudiowMgr>> GetAllStudentsMgrAsync()
         {
             return await _context.Studenci
@@ -65,7 +59,6 @@ namespace Application.Services
                 .ToListAsync();
         }
 
-        // READ BY ID
         public async Task<StudentStudiowMgr?> GetStudentMgrByIdAsync(int id)
         {
             return await _context.Studenci
@@ -75,7 +68,6 @@ namespace Application.Services
                 .SingleOrDefaultAsync(s => s.Id == id);
         }
 
-        // UPDATE
         public async Task<StudentStudiowMgr?> UpdateStudentMgrAsync(int id, string? imie = null, string? nazwisko = null, int? rokStudiow = null, Adres? adres = null, string? tematPracy = null, int? promotorId = null)
         {
             var student = await _context.Studenci.OfType<StudentStudiowMgr>().SingleOrDefaultAsync(s => s.Id == id);
@@ -99,7 +91,6 @@ namespace Application.Services
             return student;
         }
 
-        // DELETE
         public async Task DeleteStudentMgrAsync(int id)
         {
             var student = await _context.Studenci.OfType<StudentStudiowMgr>().SingleOrDefaultAsync(s => s.Id == id);

@@ -18,13 +18,11 @@ namespace Application.Services
             _context = context;
         }
 
-        // Pobranie kolejnego numeru (i inkrementacja)
         public async Task<int> GetNextAsync(string prefix)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
 
-            var licznik = await _context.LicznikiIndeksow
-                .SingleOrDefaultAsync(l => l.Prefix == prefix);
+            var licznik = await _context.LicznikiIndeksow.SingleOrDefaultAsync(l => l.Prefix == prefix);
 
             if (licznik == null)
             {
@@ -47,7 +45,6 @@ namespace Application.Services
             return licznik.AktualnaWartosc;
         }
 
-        // Tworzenie nowego prefiksu
         public async Task<LicznikIndeksow> CreatePrefixAsync(string prefix, int startValue = 0)
         {
             if (await _context.LicznikiIndeksow.AnyAsync(l => l.Prefix == prefix))
@@ -65,20 +62,16 @@ namespace Application.Services
             return licznik;
         }
 
-        // Pobranie pojedynczego prefiksu
         public async Task<LicznikIndeksow?> GetAsync(string prefix)
         {
-            return await _context.LicznikiIndeksow
-                .SingleOrDefaultAsync(l => l.Prefix == prefix);
+            return await _context.LicznikiIndeksow.SingleOrDefaultAsync(l => l.Prefix == prefix);
         }
 
-        // Pobranie wszystkich prefiksów
         public async Task<List<LicznikIndeksow>> GetAllAsync()
         {
             return await _context.LicznikiIndeksow.ToListAsync();
         }
 
-        // Aktualizacja wartości licznika
         public async Task<LicznikIndeksow?> UpdateAsync(string prefix, int newValue)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
@@ -104,11 +97,9 @@ namespace Application.Services
             }
         }
 
-        // Usunięcie prefiksu
         public async Task DeleteAsync(string prefix)
         {
-            var licznik = await _context.LicznikiIndeksow
-                .SingleOrDefaultAsync(l => l.Prefix == prefix);
+            var licznik = await _context.LicznikiIndeksow.SingleOrDefaultAsync(l => l.Prefix == prefix);
 
             if (licznik == null) return;
             var students = await _context.Studenci
@@ -127,7 +118,6 @@ namespace Application.Services
             await _context.SaveChangesAsync();
         }
 
-        // Dekrementacja jeśli ostatni
         public async Task DecrementIfLast(string numer)
         {
             var prefix = new string(numer.TakeWhile(char.IsLetter).ToArray());
@@ -135,8 +125,7 @@ namespace Application.Services
             if (!int.TryParse(liczbaStr, out var liczba))
                 throw new InvalidOperationException($"Numer '{numer}' nie zawiera poprawnej liczby po prefiksie.");
 
-            var licznik = await _context.LicznikiIndeksow
-                .SingleOrDefaultAsync(l => l.Prefix == prefix);
+            var licznik = await _context.LicznikiIndeksow.SingleOrDefaultAsync(l => l.Prefix == prefix);
             if (licznik == null)
                 throw new InvalidOperationException($"Prefiks '{prefix}' nie istnieje.");
 
