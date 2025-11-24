@@ -33,7 +33,7 @@ namespace Application.Services
             var enrollment = await _context.Enrollmenty
                 .SingleOrDefaultAsync(e => e.StudentId == studentId && e.KursId == kursId);
 
-            if (enrollment == null) return null;
+            if (enrollment == null) throw new InvalidOperationException("Nie istnieje taki enrollment!");
 
             enrollment.Ocena = ocena;
             await _context.SaveChangesAsync();

@@ -22,6 +22,7 @@ class Program
         var studentService = sp.GetRequiredService<IStudentService>();
         var studentStudiowMgrService = sp.GetRequiredService<IStudentStudiowMgrService>();
         var wydzialService = sp.GetRequiredService<IWydzialService>();
+        var enrollmentService = sp.GetRequiredService<IEnrollmentService>();
 
         while (true)
         {
@@ -44,8 +45,15 @@ class Program
             Console.WriteLine("6. Lista gabinetów");
             Console.WriteLine("\t61. Stwórz");
             Console.WriteLine("\t62. Edytuj");
-            Console.WriteLine("7. Kursy studenta");
-            Console.WriteLine("8. Usuń studenta / profesora / gabinet / kurs");
+            Console.WriteLine("7. Lista wydziałów");
+            Console.WriteLine("\t71. Stwórz");
+            Console.WriteLine("\t72. Edytuj");
+            Console.WriteLine("\t73. Usuń");
+            Console.WriteLine("8. Lista kursów studenta");
+            Console.WriteLine("\t81. Zapisz");
+            Console.WriteLine("\t82. Skreśl");
+            Console.WriteLine("\t83. Oceń");
+            Console.WriteLine("9. Usuń studenta / profesora / gabinet / kurs");
             Console.WriteLine("0. Wyjście");
             Console.Write("Wybierz opcję: ");
 
@@ -588,6 +596,68 @@ class Program
                     break;
 
                 case "7":
+                    var wydzialy = await wydzialService.GetAllWydzialyAsync();
+                    if (!wydzialy.Any()) Console.WriteLine("Nothing to show");
+                    else
+                    {
+                        foreach (var w in wydzialy)
+                        {
+                            Console.WriteLine($"{w.Id}: {w.Nazwa}");
+                        }
+                    }
+                    Console.ReadKey();
+                    break;
+
+                case "71":
+                    Console.Write("Podaj nazwę wydziału: ");
+                    var nazwa = Console.ReadLine();
+
+                    var newWydzial = await wydzialService.CreateWydzialAsync(nazwa!);
+                    Console.WriteLine($"Utworzono wydział.");
+                    Console.ReadKey();
+                    break;
+
+                case "72":
+                    Console.Write("Podaj ID wydziału do edycji: ");
+                    if (!int.TryParse(Console.ReadLine(), out int editId))
+                    {
+                        Console.WriteLine("Niepoprawne ID.");
+                        Console.ReadKey();
+                        break;
+                    }
+
+                    Console.Write("Podaj nową nazwę: ");
+                    var newName = Console.ReadLine();
+
+                    var updatedWydzial = await wydzialService.UpdateWydzialAsync(editId, newName);
+                    if (updatedWydzial == null) Console.WriteLine("Wydział nie istnieje.");
+                    else Console.WriteLine("Wydział zaktualizowany.");
+                    Console.ReadKey();
+                    break;
+
+                case "73":
+                    Console.Write("Podaj ID wydziału do usunięcia: ");
+                    if (!int.TryParse(Console.ReadLine(), out int delId))
+                    {
+                        Console.WriteLine("Niepoprawne ID.");
+                        Console.ReadKey();
+                        break;
+                    }
+
+                    try
+                    {
+                        await wydzialService.DeleteWydzialAsync(delId);
+                        Console.WriteLine("Wydział usunięty.");
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
+
+                    Console.ReadKey();
+                    break;
+
+                case "8":
                     var allStudents = await studentService.GetAllStudentsAsync();
                     if (!allStudents.Any())
                     {
@@ -607,8 +677,7 @@ class Program
                         break;
                     }
 
-                    var studentEnrollments = await sp.GetRequiredService<IEnrollmentService>()
-                        .GetAllEnrollmentsAsync();
+                    var studentEnrollments = await enrollmentService.GetAllEnrollmentsAsync();
 
                     var studentEnr = studentEnrollments
                         .Where(e => e.StudentId == studentId)
@@ -623,13 +692,123 @@ class Program
                         Console.WriteLine($"Kursy dla studenta {studentId}:");
                         foreach (var e in studentEnr)
                         {
-                            Console.WriteLine($"Kurs: {e.Kurs?.Nazwa ?? "Unknown"} ({e.Kurs?.Kod ?? "?"}), Semestr: {e.Semestr}, Ocena: {(e.Ocena.HasValue ? e.Ocena.ToString() : "N/A")}");
+                            Console.WriteLine($"Kurs: {e.Kurs?.Nazwa ?? "Unknown"} ({e.Kurs?.Kod ?? "?"}), Semestr: {e.Semestr}, Ocena: {(e.Ocena.HasValue ? e.Ocena.ToString() : "N/A")} | kurId {e.KursId}, studId {e.StudentId}, eId {e.Id}");
                         }
                     }
                     Console.ReadKey();
                     break;
 
-                case "8":
+                case "81":
+                    Console.Write("Podaj ID studenta: ");
+                    if (!int.TryParse(Console.ReadLine(), out int studentIdToEnroll))
+                    {
+                        Console.WriteLine("Niepoprawne ID.");
+                        Console.ReadKey();
+                        break;
+                    }
+
+                    Console.Write("Podaj ID kursu: ");
+                    if (!int.TryParse(Console.ReadLine(), out int kursId))
+                    {
+                        Console.WriteLine("Niepoprawne ID.");
+                        Console.ReadKey();
+                        break;
+                    }
+
+                    Console.Write("Podaj semestr zapisu: ");
+                    var input = !int.TryParse(Console.ReadLine(), out int semester);
+
+                    try
+                    {
+                        var enr = await enrollmentService.EnrollStudentAsync(studentIdToEnroll, kursId, semester);
+                        Console.WriteLine($"Student zapisany na kurs.");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Błąd: {ex.Message}");
+                        Console.ReadKey();
+                    }
+                    Console.ReadKey();
+                    break;
+
+                case "82":
+                    Console.Write("Podaj ID studenta: ");
+                    if (!int.TryParse(Console.ReadLine(), out int studentIdWypis))
+                    {
+                        Console.WriteLine("Niepoprawne ID.");
+                        Console.ReadKey();
+                        break;
+                    }
+
+                    Console.Write("Podaj ID kursu: ");
+                    if (!int.TryParse(Console.ReadLine(), out int kursIdWypis))
+                    {
+                        Console.WriteLine("Niepoprawne ID.");
+                        Console.ReadKey();
+                        break;
+                    }
+
+                    var studentEnrollmentsDelete = await enrollmentService.GetAllEnrollmentsAsync();
+                    var enrollmentId = studentEnrollmentsDelete.FirstOrDefault(e => e.StudentId == studentIdWypis && e.KursId == kursIdWypis).Id;
+                    if (enrollmentId == null)
+                    {
+                        Console.WriteLine("Nie znaleziono tego zapisu!");
+                        Console.ReadKey();
+                        break;
+                    }
+
+                    try
+                    {
+                        await enrollmentService.DeleteEnrollmentAsync(enrollmentId);
+                        Console.WriteLine("Student skreślony z kursu");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Błąd: {ex.Message}");
+                        Console.ReadKey();
+                    }
+                    Console.ReadKey();
+                    break;
+
+                case "83":
+                    Console.Write("Podaj ID studenta: ");
+                    if (!int.TryParse(Console.ReadLine(), out int studentIdOcena))
+                    {
+                        Console.WriteLine("Niepoprawne ID.");
+                        Console.ReadKey();
+                        return;
+                    }
+
+                    Console.Write("Podaj ID kursu: ");
+                    if (!int.TryParse(Console.ReadLine(), out int kursIdOcena))
+                    {
+                        Console.WriteLine("Niepoprawne ID.");
+                        Console.ReadKey();
+                        return;
+                    }
+
+                    Console.Write("Podaj ocenę (2–5): ");
+                    if (!double.TryParse(Console.ReadLine(), out double grade))
+                    {
+                        Console.WriteLine("Niepoprawna ocena.");
+                        Console.ReadKey();
+                        return;
+                    }
+
+                    try
+                    {
+                        await enrollmentService.UpdateGradeAsync(studentIdOcena, kursIdOcena, grade);
+                        Console.WriteLine("Ocena ustawiona.");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Błąd: {ex.Message}");
+                        Console.ReadKey();
+                    }
+                    Console.ReadKey();
+                    break;
+
+                case "9":
                     Console.WriteLine("Podaj typ encji do usunięcia (student/profesor/kurs/gabinet):");
                     var type = Console.ReadLine()?.ToLower();
                     Console.WriteLine("Podaj ID:");

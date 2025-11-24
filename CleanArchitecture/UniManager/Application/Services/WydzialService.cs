@@ -60,11 +60,19 @@ namespace Application.Services
         // DELETE
         public async Task DeleteWydzialAsync(int id)
         {
-            var wydzial = await _context.Wydzialy.FindAsync(id);
-            if (wydzial == null) return;
+            try
+            {
+                var wydzial = await _context.Wydzialy.FindAsync(id);
+                if (wydzial == null) return;
 
-            _context.Wydzialy.Remove(wydzial);
-            await _context.SaveChangesAsync();
+                _context.Wydzialy.Remove(wydzial);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Na tym wydziale istnieją kursy! Nie można usunąć. Exception = {e}");
+            }
+
         }
     }
 }
