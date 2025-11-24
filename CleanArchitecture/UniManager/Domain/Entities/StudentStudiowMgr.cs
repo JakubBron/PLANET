@@ -13,6 +13,5 @@ namespace Domain.Entities
 
         // FK
         public int? PromotorId { get; set; }
-        
     }
 }

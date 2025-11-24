@@ -22,6 +22,7 @@ class Program
         var studentStudiowMgrService = sp.GetRequiredService<IStudentStudiowMgrService>();
         var wydzialService = sp.GetRequiredService<IWydzialService>();
         var enrollmentService = sp.GetRequiredService<IEnrollmentService>();
+        var queryService = sp.GetRequiredService<IQueryService>();
 
         while (true)
         {
@@ -53,6 +54,10 @@ class Program
             Console.WriteLine("\t82. Skreśl");
             Console.WriteLine("\t83. Oceń");
             Console.WriteLine("9. Usuń studenta / profesora / gabinet / kurs");
+            Console.WriteLine("  Raporty");
+            Console.WriteLine("\t101. Profesor z największą liczbą studentów");
+            Console.WriteLine("\t102. GPA dla wydziału");
+            Console.WriteLine("\t103. Najtrudniejszy plan");
             Console.WriteLine("0. Wyjście");
             Console.Write("Wybierz opcję: ");
 
@@ -838,6 +843,90 @@ class Program
                             Console.WriteLine("Nieznany typ encji.");
                             break;
                     }
+                    Console.ReadKey();
+                    break;
+
+                case "101":
+                    var result = await queryService.GetProfesorZNajwiekszaLiczbaStudentow();
+
+                    Console.Clear();
+                    Console.WriteLine("=== Raport: Profesor z największą liczbą studentów ===");
+
+                    if (result == null)
+                    {
+                        Console.WriteLine("Brak danych.");
+                        Console.ReadKey();
+                        break;
+                    }
+
+                    var profesor = await profesorService.GetProfesorByIdAsync(result.ProfesorId);
+
+                    if (profesor == null)
+                    {
+                        Console.WriteLine($"Profesor o ID {result.ProfesorId} nie istnieje.");
+                        Console.ReadKey();
+                        return;
+                    }
+
+                    Console.WriteLine(
+                        $"Profesor: {profesor.TytulNaukowy} {profesor.Imie} {profesor.Nazwisko}\n" +
+                        $"Łączna liczba unikalnych studentów: {result.LiczbaStudentow}"
+                    );
+                    Console.ReadKey();
+                    break;
+
+                case "102":
+                    Console.Clear();
+                    Console.WriteLine("=== Raport: Średnie oceny kursów na wydziale ===\n");
+
+                    var wydzialyRaport = await wydzialService.GetAllWydzialyAsync();
+
+                    foreach (var w in wydzialyRaport)
+                        Console.WriteLine($"{w.Id}. {w.Nazwa}");
+
+                    Console.Write("\nWybierz ID wydziału: ");
+                    int wId = int.Parse(Console.ReadLine()!);
+
+                    var results = await queryService.GetGpaDlaWydzialu(wId);
+
+                    Console.Clear();
+                    Console.WriteLine($"=== Wydział: {wydzialyRaport.First(x => x.Id == wId).Nazwa} ===\n");
+
+                    if (!results.Any())
+                    {
+                        Console.WriteLine("Brak kursów lub ocen.");
+                        Console.ReadKey();
+                        return;
+                    }
+
+                    foreach (var r in results)
+                    {
+                        Console.WriteLine(
+                            $"{r.Nazwa} ({r.Kod})\n" +
+                            $"Średnia ocen: {(r.SredniaOcen.HasValue ? r.SredniaOcen.Value.ToString("0.00") : "brak")}\n" +
+                            $"Liczba ocenionych studentów: {r.LiczbaOcenionych}\n"
+                        );
+                    }
+
+                    Console.ReadKey();
+                    break;
+
+                case "103":
+                    Console.Clear();
+                    Console.WriteLine("=== Raport: Student z najtrudniejszym planem ===\n");
+                    var raport = await queryService.GetNajtrudniejszyPlan();
+
+                    if (raport == null)
+                    {
+                        Console.WriteLine("Brak danych.");
+                        Console.ReadKey();
+                        return;
+                    }
+
+                    Console.WriteLine(
+                        $"Student: {raport.Imie} {raport.Nazwisko} (ID: {raport.StudentId})\n" +
+                        $"Łączne ECTS kursów + prerekwizytów: {raport.EctsKursow+raport.EctsPrerekwizytow} ({raport.EctsKursow} + {raport.EctsPrerekwizytow})"
+                    );
                     Console.ReadKey();
                     break;
 

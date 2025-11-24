@@ -25,6 +25,7 @@ namespace Application
             services.AddScoped<IEnrollmentService, EnrollmentService>();
             services.AddScoped<IWydzialService, WydzialService>();
             services.AddScoped<IGabinetService, GabinetService>();
+            services.AddScoped<IQueryService, QueryService>();
 
             services.AddScoped<BogusGenerator>();
 
