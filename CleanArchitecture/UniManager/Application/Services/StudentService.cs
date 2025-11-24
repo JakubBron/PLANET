@@ -83,7 +83,6 @@ namespace Application.Services
         public async Task DeleteStudentAsync(int id)
         {
             var student = await _context.Studenci.FindAsync(id);
-            await _context.SaveChangesAsync();
             if (student == null) return;
 
             var numer = student.IndeksUczelniany;

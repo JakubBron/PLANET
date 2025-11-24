@@ -66,145 +66,155 @@ public class BogusGenerator
 
     public async Task GenerateAllAsync(int numWydzialy = 3, int numProfesors = 5, int numStudents = 20, int numStudentsMgr = 5, int numKursy = 10)
     {
-        var faker = new Faker("pl");
-
-        // === Wydzialy ===
-        var wydzialy = new List<Wydzial>();
-        for (int i = 0; i < numWydzialy; i++)
+        try
         {
-            var wydzial = await _wydzialService.CreateWydzialAsync(nazwyWydzialow[faker.Random.Int(0, nazwyWydzialow.Count-1)]);
-            wydzialy.Add(wydzial);
-        }
+            var faker = new Faker("pl");
 
-        // === Profesorzy ===
-        var profesors = new List<Profesor>();
-        for (int i = 0; i < numProfesors; i++)
-        {
-            var adres = new Adres
+            // === Wydzialy ===
+            var wydzialy = new List<Wydzial>();
+            for (int i = 0; i < numWydzialy; i++)
             {
-                Ulica = faker.Address.StreetName(),
-                NumerDomu = faker.Random.Int(1, 100).ToString(),
-                Miasto = faker.Address.City(),
-                KodPocztowy = faker.Address.ZipCode()
-            };
-
-            var wydzial = faker.PickRandom(wydzialy);
-
-            var profesor = await _profesorService.CreateProfesorAsync(
-                faker.Name.FirstName(),
-                faker.Name.LastName(),
-                tytuly[faker.Random.Int(0, tytuly.Count-1)],
-                adres,
-                wydzial.Id,
-                null
-            );
-
-            profesors.Add(profesor);
-        }
-
-        // === Gabinety (optional) ===
-        for (int i = 0; i < numProfesors; i++)
-        {
-            await _gabinetService.CreateGabinetAsync($"G-{i + 1}", profesors[i].Id);
-        }
-
-        // === Studenci ===
-        var students = new List<Student>();
-        for (int i = 0; i < numStudents; i++)
-        {
-            var adres = new Adres
-            {
-                Ulica = faker.Address.StreetName(),
-                NumerDomu = faker.Random.Int(1, 100).ToString(),
-                Miasto = faker.Address.City(),
-                KodPocztowy = faker.Address.ZipCode()
-            };
-
-            var student = await _studentService.CreateStudentAsync(
-                faker.Name.FirstName(),
-                faker.Name.LastName(),
-                faker.Random.Int(1, 3),
-                adres
-            );
-
-            students.Add(student);
-        }
-
-        // === Studenci mgr ===
-        for (int i = 0; i < numStudentsMgr; i++)
-        {
-            var adres = new Adres
-            {
-                Ulica = faker.Address.StreetName(),
-                NumerDomu = faker.Random.Int(1, 100).ToString(),
-                Miasto = faker.Address.City(),
-                KodPocztowy = faker.Address.ZipCode()
-            };
-
-            var promotor = faker.PickRandom(profesors);
-
-            await _studentMgrService.CreateStudentMgrAsync(
-                faker.Name.FirstName(),
-                faker.Name.LastName(),
-                faker.Random.Int(1, 3),
-                adres,
-                faker.Lorem.Sentence(5), // temat pracy dyplomowej
-                promotor.Id
-            );
-        }
-
-        // === Kursy ===
-        var kursy = new List<Kurs>();
-        for (int i = 0; i < numKursy; i++)
-        {
-            var prowadzacy = faker.PickRandom(profesors);
-            var wydzial = faker.PickRandom(wydzialy);
-
-            var kurs = await _kursService.CreateKursAsync(
-                nazwyKursow[faker.Random.Int(0, nazwyKursow.Count-1)],
-                $"K{i + 1:D3}",
-                faker.Random.Int(1, 7),
-                prowadzacy.Id,
-                wydzial.Id
-            );
-
-            kursy.Add(kurs);
-        }
-
-        // === Prerequisites (random) ===
-        foreach (var kurs in kursy)
-        {
-            var possiblePrereqs = kursy.Where(k => k.Id != kurs.Id).ToList();
-            int numPrereqs = faker.Random.Int(0, Math.Min(3, possiblePrereqs.Count));
-            var prereqList = faker.PickRandom(possiblePrereqs, numPrereqs).Select(k => k.Id).ToList();
-
-            foreach (var preId in prereqList)
-            {
-                await _kursService.AddPrerequisiteAsync(kurs.Id, preId);
+                var wydzial =
+                    await _wydzialService.CreateWydzialAsync(
+                        nazwyWydzialow[faker.Random.Int(0, nazwyWydzialow.Count - 1)]);
+                wydzialy.Add(wydzial);
             }
-        }
 
-        // === Enrollments ===
-        foreach (var student in students)
-        {
-            // Each student enrolls in 2-5 courses randomly
-            int coursesToEnroll = faker.Random.Int(2, Math.Min(5, kursy.Count));
-            var chosenCourses = faker.PickRandom(kursy, coursesToEnroll);
-
-            foreach (var kurs in chosenCourses)
+            // === Profesorzy ===
+            var profesors = new List<Profesor>();
+            for (int i = 0; i < numProfesors; i++)
             {
-                int semester = faker.Random.Int(1, _maxSemester);
-
-                // Enroll student in course
-                await _enrollmentService.EnrollStudentAsync(student.Id, kurs.Id, semester);
-
-                // Optionally assign a random grade (simulate finished courses)
-                if (faker.Random.Double(0D, 1D) < 0.6D)
+                var adres = new Adres
                 {
-                    double grade = Math.Round(faker.Random.Double(2.0, 5.0), 1);
-                    await _enrollmentService.UpdateGradeAsync(student.Id, kurs.Id, grade);
+                    Ulica = faker.Address.StreetName(),
+                    NumerDomu = faker.Random.Int(1, 100).ToString(),
+                    Miasto = faker.Address.City(),
+                    KodPocztowy = faker.Address.ZipCode()
+                };
+
+                var wydzial = faker.PickRandom(wydzialy);
+
+                var profesor = await _profesorService.CreateProfesorAsync(
+                    faker.Name.FirstName(),
+                    faker.Name.LastName(),
+                    tytuly[faker.Random.Int(0, tytuly.Count - 1)],
+                    adres,
+                    wydzial.Id,
+                    null
+                );
+
+                profesors.Add(profesor);
+            }
+
+            // === Gabinety (optional) ===
+            for (int i = 0; i < numProfesors; i++)
+            {
+                await _gabinetService.CreateGabinetAsync($"G-{i + 1}", profesors[i].Id);
+            }
+
+            // === Studenci ===
+            var students = new List<Student>();
+            for (int i = 0; i < numStudents; i++)
+            {
+                var adres = new Adres
+                {
+                    Ulica = faker.Address.StreetName(),
+                    NumerDomu = faker.Random.Int(1, 100).ToString(),
+                    Miasto = faker.Address.City(),
+                    KodPocztowy = faker.Address.ZipCode()
+                };
+
+                var student = await _studentService.CreateStudentAsync(
+                    faker.Name.FirstName(),
+                    faker.Name.LastName(),
+                    faker.Random.Int(1, 3),
+                    adres
+                );
+
+                students.Add(student);
+            }
+
+            // === Studenci mgr ===
+            for (int i = 0; i < numStudentsMgr; i++)
+            {
+                var adres = new Adres
+                {
+                    Ulica = faker.Address.StreetName(),
+                    NumerDomu = faker.Random.Int(1, 100).ToString(),
+                    Miasto = faker.Address.City(),
+                    KodPocztowy = faker.Address.ZipCode()
+                };
+
+                var promotor = faker.PickRandom(profesors);
+
+
+                await _studentMgrService.CreateStudentMgrAsync(
+                    faker.Name.FirstName(),
+                    faker.Name.LastName(),
+                    faker.Random.Int(1, 3),
+                    adres,
+                    faker.Lorem.Sentence(5), // temat pracy dyplomowej
+                    promotor.Id
+                );
+            }
+
+            // === Kursy ===
+            var kursy = new List<Kurs>();
+            for (int i = 0; i < numKursy; i++)
+            {
+                var prowadzacy = /*faker.PickRandom(profesors)*/ profesors[0];
+                var wydzial = faker.PickRandom(wydzialy);
+
+                var kurs = await _kursService.CreateKursAsync(
+                    nazwyKursow[faker.Random.Int(0, nazwyKursow.Count - 1)],
+                    $"K{i + 1:D3}",
+                    faker.Random.Int(1, 7),
+                    prowadzacy.Id,
+                    wydzial.Id
+                );
+
+                kursy.Add(kurs);
+            }
+
+            // === Prerequisites (random) ===
+            foreach (var kurs in kursy)
+            {
+                var possiblePrereqs = kursy.Where(k => k.Id != kurs.Id).ToList();
+                int numPrereqs = faker.Random.Int(0, Math.Min(3, possiblePrereqs.Count));
+                var prereqList = faker.PickRandom(possiblePrereqs, numPrereqs).Select(k => k.Id).ToList();
+
+                foreach (var preId in prereqList)
+                {
+                    await _kursService.AddPrerequisiteAsync(kurs.Id, preId);
                 }
             }
+
+            // === Enrollments ===
+            foreach (var student in students)
+            {
+                // Each student enrolls in 2-5 courses randomly
+                int coursesToEnroll = faker.Random.Int(2, Math.Min(5, kursy.Count));
+                var chosenCourses = faker.PickRandom(kursy, coursesToEnroll);
+
+                foreach (var kurs in chosenCourses)
+                {
+                    int semester = faker.Random.Int(1, _maxSemester);
+
+                    // Enroll student in course
+                    await _enrollmentService.EnrollStudentAsync(student.Id, kurs.Id, semester);
+
+                    // Optionally assign a random grade (simulate finished courses)
+                    if (faker.Random.Double(0D, 1D) < 0.6D)
+                    {
+                        double grade = Math.Round(faker.Random.Double(2.0, 5.0), 1);
+                        await _enrollmentService.UpdateGradeAsync(student.Id, kurs.Id, grade);
+                    }
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            throw e;
         }
     }
 }

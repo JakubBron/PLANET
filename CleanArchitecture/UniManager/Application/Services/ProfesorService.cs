@@ -42,6 +42,8 @@ namespace Application.Services
                     if (gabinet == null)
                         throw new InvalidOperationException($"Gabinet o Id={gabinetId} nie istnieje.");
                     profesor.Gabinet = gabinet;
+                    gabinet.Profesor = profesor;
+                    gabinet.ProfesorId = profesor.Id;
                 }
 
                 _context.Profesorzy.Add(profesor);
@@ -49,10 +51,10 @@ namespace Application.Services
                 //await transaction.CommitAsync();
                 return profesor;
             }
-            catch
+            catch(Exception e)
             {
                 //transaction.Rollback();
-                throw;
+                throw e;
             }
         }
 
@@ -108,12 +110,22 @@ namespace Application.Services
         {
             var profesor = await _context.Profesorzy.FindAsync(id);
             if (profesor == null) return;
+            
+            var gabinet = await _context.Gabinety.SingleOrDefaultAsync(g => g.ProfesorId == profesor.Id);
+            if (gabinet != null)
+            {
+                gabinet.ProfesorId = null;
+                gabinet.Profesor = null;
+            }
 
             var numer = profesor.IndeksUczelniany;
             if (numer != null)
             {
                 _licznikIndeksowService.DecrementIfLast(numer);
             }
+
+            
+            
 
             _context.Profesorzy.Remove(profesor);
             await _context.SaveChangesAsync();

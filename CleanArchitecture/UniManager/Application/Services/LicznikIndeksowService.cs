@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Application.Interfaces;
+using Humanizer;
 using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Application.Services
@@ -78,53 +79,20 @@ namespace Application.Services
         }
 
         // Aktualizacja wartości licznika
-        public async Task<LicznikIndeksow?> UpdateAsync(string oldPrefix, string newPrefix, int? newValue = null)
+        public async Task<LicznikIndeksow?> UpdateAsync(string prefix, int newValue)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
-                var licznik = await _context.LicznikiIndeksow.SingleOrDefaultAsync(l => l.Prefix == oldPrefix);
+                var licznik = await _context.LicznikiIndeksow.SingleOrDefaultAsync(l => l.Prefix == prefix);
                 if (licznik == null)
-                    throw new InvalidOperationException($"Prefiks '{oldPrefix}' nie istnieje.");
+                    throw new InvalidOperationException($"Prefiks '{prefix}' nie istnieje.");
 
-                // 2. Sprawdzenie, czy nowy prefiks już nie istnieje
-                var exists = await _context.LicznikiIndeksow.AnyAsync(l => l.Prefix == newPrefix);
-                if (exists)
-                    throw new InvalidOperationException($"Prefiks '{newPrefix}' już istnieje.");
+                if (licznik.AktualnaWartosc > newValue)
+                    throw new InvalidOperationException("Nie można ustawić wartości mniejszej niż aktualny stan licznika");
 
-                // 3. Aktualizacja studentów (lub profesorów) — zakładamy, że tylko studentów dla "S"
-                var students = await _context.Studenci
-                    .Where(s => s.IndeksUczelniany.StartsWith(oldPrefix))
-                    .ToListAsync();
-                var professors = await _context.Profesorzy
-                    .Where(p => p.IndeksUczelniany.StartsWith(oldPrefix))
-                    .ToListAsync();
+                licznik.AktualnaWartosc = newValue;
 
-                if ((students.Count > 0 || professors.Count > 0) && newValue != null)
-                {
-                    throw new InvalidOperationException(
-                        "Nie można ustawić nowej wartości tego prefixu! Ten licznik był aktywny w przeszłości.");
-                }
-
-                else if (newValue != null)
-                {
-                    licznik.AktualnaWartosc = newValue.Value;
-                }
-
-                foreach (var student in students)
-                {
-                    student.IndeksUczelniany = newPrefix + student.IndeksUczelniany.Substring(oldPrefix.Length);
-                }
-
-                foreach (var prof in professors)
-                {
-                    prof.IndeksUczelniany = newPrefix + prof.IndeksUczelniany.Substring(oldPrefix.Length);
-                }
-
-                // 4. Zmiana prefiksu w liczniku
-                licznik.Prefix = newPrefix;
-
-                // 5. Zapis zmian i commit transakcji
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
                 return licznik;
@@ -179,8 +147,8 @@ namespace Application.Services
                 if (licznik.AktualnaWartosc == liczba)
                 {
                     licznik.AktualnaWartosc--;
-                    await _context.SaveChangesAsync();
                 }
+                transaction.CommitAsync();
             }
             catch(Exception e)
             {

@@ -10,7 +10,7 @@ namespace Application.Interfaces
         Task<LicznikIndeksow> CreatePrefixAsync(string prefix, int startValue = 0); // Tworzenie nowego prefiksu
         Task<LicznikIndeksow?> GetAsync(string prefix);         // Pobranie pojedynczego
         Task<List<LicznikIndeksow>> GetAllAsync();             // Pobranie wszystkich
-        Task<LicznikIndeksow?> UpdateAsync(string oldPrefix, string newPrefix, int? newValue = null); // Aktualizacja wartości
+        Task<LicznikIndeksow?> UpdateAsync(string prefix, int newValue); // Aktualizacja wartości
         Task DeleteAsync(string prefix);                        // Usunięcie prefiksu
         Task DecrementIfLast(string numer);                     // Dekrementacja jeśli ostatni
     }
